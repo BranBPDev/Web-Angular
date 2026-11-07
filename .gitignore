@@ -1,0 +1,44 @@
+# Compilación
+/dist
+/out-tsc
+/bazel-out
+
+# Dependencias
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Caché de Angular y herramientas
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.iml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Variables de entorno y secretos
+.env
+.env.*
+*.pem
+
+# Logs
+*.log
