@@ -1,8 +1,12 @@
-name: Deploy to GitHub Pages
+name: Deploy branbp.com
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+    paths-ignore:
+      - 'testing/**'
+      - 'docs/**'
+      - '**.md'
   workflow_dispatch:
 
 permissions:
@@ -18,18 +22,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npx ng build --base-href /
-      - name: SPA fallback
-        run: cp dist/web-angular/browser/index.html dist/web-angular/browser/404.html
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar Angular
+        run: npx ng build --configuration production --base-href /
+
+      - name: Localizar salida y preparar SPA fallback
+        run: |
+          OUT=$(dirname "$(find dist -path '*/browser/index.html' | head -n 1)")
+          echo "Salida: $OUT"
+          cp "$OUT/index.html" "$OUT/404.html"
+          echo "OUT_DIR=$OUT" >> "$GITHUB_ENV"
+
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/web-angular/browser
+          path: ${{ env.OUT_DIR }}
 
   deploy:
     needs: build
@@ -38,5 +56,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Publicar en GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
