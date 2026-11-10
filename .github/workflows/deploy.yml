@@ -6,6 +6,9 @@ on:
     paths-ignore:
       - 'testing/**'
       - 'docs/**'
+      - 'database/**'
+      - 'api/**'
+      - '.github/workflows/deploy-api.yml'
       - '**.md'
   workflow_dispatch:
 

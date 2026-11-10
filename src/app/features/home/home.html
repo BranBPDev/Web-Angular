@@ -1,0 +1,7 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <h1>¡Bienvenido!</h1>
+    <p class="auth-subtitle">Has iniciado sesión como <strong>{{ auth.user()?.email }}</strong>.</p>
+    <button class="btn" type="button" (click)="logout()">Cerrar sesión</button>
+  </section>
+</main>

@@ -1,0 +1,14 @@
+<div class="field">
+  <label [for]="id">{{ label() }}</label>
+  <input
+    [id]="id"
+    [type]="type()"
+    [formControl]="control()"
+    [attr.autocomplete]="autocomplete()"
+    [attr.inputmode]="inputmode()"
+    [attr.maxlength]="maxlength()"
+  />
+  @if (error(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+</div>

@@ -1,0 +1,9 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <h1>{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="auth-subtitle">{{ subtitle() }}</p>
+    }
+    <ng-content />
+  </section>
+</main>
