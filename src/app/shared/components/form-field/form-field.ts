@@ -1,13 +1,14 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { controlError } from '../../utils/form-errors';
+import { Icon } from '../icon/icon';
 
 let nextId = 0;
 
-/** Campo de formulario reutilizable: etiqueta, input y mensaje de error. */
+/** Campo de formulario reutilizable: etiqueta, input, mensaje de error y, en contraseñas, botón mostrar/ocultar. */
 @Component({
   selector: 'app-form-field',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Icon],
   templateUrl: './form-field.html',
 })
 export class FormField {
@@ -19,6 +20,13 @@ export class FormField {
   readonly maxlength = input<number | null>(null);
 
   protected readonly id = `field-${nextId++}`;
+  protected readonly revealed = signal(false);
+  protected readonly isPassword = computed(() => this.type() === 'password');
+  protected readonly inputType = computed(() => (this.isPassword() && this.revealed() ? 'text' : this.type()));
+
+  protected toggleReveal(): void {
+    this.revealed.update((value) => !value);
+  }
 
   protected error(): string | null {
     return controlError(this.control());
