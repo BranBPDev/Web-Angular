@@ -1,10 +1,12 @@
 import { BaseDao } from './BaseDao';
+import { parseRole } from '../models/Role';
 import type { User } from '../models/User';
 
 interface UserRow {
   id: string;
   email: string;
   password_hash: string;
+  role: string;
   verified_at: string | Date | null;
   created_at: string | Date;
 }
@@ -45,6 +47,7 @@ export class UserDao extends BaseDao {
       id: row.id,
       email: row.email,
       passwordHash: row.password_hash,
+      role: parseRole(row.role),
       verifiedAt: row.verified_at ? new Date(row.verified_at) : null,
       createdAt: new Date(row.created_at),
     };

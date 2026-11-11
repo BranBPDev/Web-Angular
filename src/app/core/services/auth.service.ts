@@ -11,6 +11,7 @@ export class AuthService {
   private readonly currentUser = signal<User | null>(null);
   readonly user = this.currentUser.asReadonly();
   readonly isAuthenticated = computed(() => this.currentUser() !== null);
+  readonly isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
   /** Se ejecuta al arrancar: recupera la sesión guardada, si sigue siendo válida. */
   async restoreSession(): Promise<void> {

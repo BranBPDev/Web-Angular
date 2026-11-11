@@ -8,4 +8,5 @@ export interface Env {
   // Variables públicas (wrangler.jsonc)
   ALLOWED_ORIGINS: string;
   EMAIL_FROM: string;
+  SITE_URL: string;
 }

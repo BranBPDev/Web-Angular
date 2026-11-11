@@ -1,6 +1,8 @@
 import type { Env } from './config/env';
+import { AdminController } from './controllers/AdminController';
 import { AuthController } from './controllers/AuthController';
 import { SystemController } from './controllers/SystemController';
+import { Authorizer } from './core/Authorizer';
 import { BearerAuth } from './core/BearerAuth';
 import { Cors } from './core/Cors';
 import { HttpError } from './core/errors';
@@ -11,6 +13,7 @@ import { VerificationCodeDao } from './daos/VerificationCodeDao';
 import { Database } from './db/Database';
 import { AuthService } from './services/AuthService';
 import { ResendEmailSender } from './services/EmailSender';
+import { EmailTemplates } from './services/EmailTemplates';
 import { GoogleIdentityVerifier } from './services/GoogleIdentityVerifier';
 import { CodeHasher } from './utils/CodeHasher';
 import { Hmac } from './utils/Hmac';
@@ -28,17 +31,21 @@ export class App {
     const db = new Database(env.NEON_DATABASE_URL);
     const hmac = new Hmac(env.JWT_SECRET);
     const jwt = new JwtService(hmac, SESSION_TTL_SECONDS);
+    const users = new UserDao(db);
+    const bearer = new BearerAuth(jwt);
 
     const authService = new AuthService(
-      new UserDao(db),
+      users,
       new VerificationCodeDao(db),
       new PasswordHasher(),
       new CodeHasher(hmac),
       jwt,
       new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM),
+      new EmailTemplates(env.SITE_URL),
       new GoogleIdentityVerifier(env.GOOGLE_CLIENT_ID ?? ''),
     );
-    const auth = new AuthController(authService, new BearerAuth(jwt));
+    const auth = new AuthController(authService, bearer);
+    const admin = new AdminController(new Authorizer(bearer, users));
     const system = new SystemController(env.GOOGLE_CLIENT_ID ?? '');
 
     this.cors = new Cors(env.ALLOWED_ORIGINS);
@@ -50,7 +57,8 @@ export class App {
       .post('/api/auth/verify', auth.verify)
       .post('/api/auth/login', auth.login)
       .post('/api/auth/google', auth.google)
-      .get('/api/auth/me', auth.me);
+      .get('/api/auth/me', auth.me)
+      .get('/api/admin/check', admin.check);
   }
 
   async handle(request: Request): Promise<Response> {

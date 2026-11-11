@@ -1,39 +1,37 @@
-<div class="page">
-  <app-site-header [email]="auth.user()?.email ?? null" (logout)="logout()" />
+<app-shell>
+  <section class="hero">
+    <p class="eyebrow">Panel principal</p>
+    <h1>Hola, {{ displayName() }}</h1>
+    <p class="hero__text">
+      Te damos la bienvenida a branbp.com. Desde aquí irás accediendo a todo lo que vayamos añadiendo.
+    </p>
+  </section>
 
-  <main class="container page__main">
-    <section class="hero">
-      <p class="eyebrow">Panel principal</p>
-      <h1>Hola, {{ displayName() }}</h1>
-      <p class="hero__text">
-        Te damos la bienvenida a branbp.com. Desde aquí irás accediendo a todo lo que vayamos añadiendo.
-      </p>
-    </section>
+  <section class="grid" aria-label="Características">
+    @for (feature of features; track feature.title) {
+      <article class="card">
+        <div class="card__icon"><app-icon [name]="feature.icon" [size]="22" /></div>
+        <h2>{{ feature.title }}</h2>
+        <p>{{ feature.description }}</p>
+      </article>
+    }
+  </section>
 
-    <section class="grid" aria-label="Características">
-      @for (feature of features; track feature.title) {
-        <article class="card">
-          <div class="card__icon"><app-icon [name]="feature.icon" [size]="22" /></div>
-          <h2>{{ feature.title }}</h2>
-          <p>{{ feature.description }}</p>
-        </article>
-      }
-    </section>
-
-    <section class="panel">
-      <h2>Tu cuenta</h2>
-      <dl class="panel__list">
-        <div>
-          <dt>Correo</dt>
-          <dd>{{ auth.user()?.email }}</dd>
-        </div>
-        <div>
-          <dt>Estado</dt>
-          <dd><span class="badge badge--ok">Verificada</span></dd>
-        </div>
-      </dl>
-    </section>
-  </main>
-
-  <app-site-footer />
-</div>
+  <section class="panel">
+    <h2>Tu cuenta</h2>
+    <dl class="panel__list">
+      <div>
+        <dt>Correo</dt>
+        <dd>{{ auth.user()?.email }}</dd>
+      </div>
+      <div>
+        <dt>Estado</dt>
+        <dd><span class="badge badge--ok">Verificada</span></dd>
+      </div>
+      <div>
+        <dt>Rol</dt>
+        <dd><span class="badge" [class.badge--admin]="auth.isAdmin()">{{ roleLabel() }}</span></dd>
+      </div>
+    </dl>
+  </section>
+</app-shell>

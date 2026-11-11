@@ -7,8 +7,8 @@ import type { JwtService } from '../utils/JwtService';
 import { PasswordHasher } from '../utils/PasswordHasher';
 import { generateNumericCode } from '../utils/random';
 import type { EmailSender } from './EmailSender';
+import type { EmailTemplates } from './EmailTemplates';
 import type { GoogleIdentityVerifier } from './GoogleIdentityVerifier';
-import { buildVerificationEmail } from './verificationEmail';
 
 export interface Session {
   token: string;
@@ -27,6 +27,7 @@ export class AuthService {
     private readonly codeHasher: CodeHasher,
     private readonly jwt: JwtService,
     private readonly mailer: EmailSender,
+    private readonly templates: EmailTemplates,
     private readonly google: GoogleIdentityVerifier,
   ) {}
 
@@ -108,7 +109,7 @@ export class AuthService {
     const code = generateNumericCode(6);
     const expiresAt = new Date(Date.now() + AuthService.CODE_TTL_MINUTES * 60_000);
     await this.codes.upsert(user.id, await this.codeHasher.hash(user.id, code), expiresAt);
-    await this.mailer.send(buildVerificationEmail(user.email, code, AuthService.CODE_TTL_MINUTES));
+    await this.mailer.send(this.templates.verification(user.email, code, AuthService.CODE_TTL_MINUTES));
   }
 
   private async createSession(user: User): Promise<Session> {

@@ -187,3 +187,14 @@ a { color: var(--primary); }
 @media (max-width: 560px) {
   .user-chip { display: none; }
 }
+
+/* ---------- Logo y roles ---------- */
+.brand { display: inline-flex; align-items: center; gap: 10px; }
+.brand__logo { display: block; width: 34px; height: auto; }
+.brand .brand__tld { color: var(--primary); }
+.brand > span { color: var(--text); }
+.auth-card__logo { display: block; width: 56px; height: auto; margin: 0 auto 14px; }
+.auth-card h1, .auth-subtitle { text-align: center; }
+.badge--admin { color: #fff; background: var(--primary); }
+.muted { margin: 0; color: var(--muted); }
+.panel p { margin: 0; }

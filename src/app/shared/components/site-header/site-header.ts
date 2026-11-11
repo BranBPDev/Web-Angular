@@ -9,5 +9,6 @@ import { Icon } from '../icon/icon';
 })
 export class SiteHeader {
   readonly email = input<string | null>(null);
+  readonly isAdmin = input<boolean>(false);
   readonly logout = output<void>();
 }

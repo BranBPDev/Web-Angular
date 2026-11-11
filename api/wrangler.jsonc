@@ -5,7 +5,8 @@
   "routes": [{ "pattern": "api.branbp.com", "custom_domain": true }],
   "vars": {
     "ALLOWED_ORIGINS": "https://branbp.com,https://www.branbp.com,http://localhost:4200",
-    "EMAIL_FROM": "branbp.com <verificacion@branbp.com>"
+    "EMAIL_FROM": "branbp.com <verificacion@branbp.com>",
+    "SITE_URL": "https://branbp.com"
   },
   "observability": { "enabled": true }
 }

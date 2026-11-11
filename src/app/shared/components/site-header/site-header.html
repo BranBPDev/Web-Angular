@@ -1,8 +1,14 @@
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="brand" routerLink="/">branbp<span>.com</span></a>
+    <a class="brand" routerLink="/">
+      <img class="brand__logo" src="/logo.png" alt="" width="34" height="33" />
+      <span>branbp<span class="brand__tld">.com</span></span>
+    </a>
 
     <div class="site-header__user">
+      @if (isAdmin()) {
+        <a class="btn-ghost" routerLink="/admin"><app-icon name="shield-check" [size]="16" /> Administración</a>
+      }
       @if (email(); as value) {
         <span class="user-chip"><app-icon name="user" [size]="16" /> {{ value }}</span>
       }
