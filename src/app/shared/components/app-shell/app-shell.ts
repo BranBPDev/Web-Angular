@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { APP_ROUTES } from '../../../core/config/app.constants';
 import { AuthService } from '../../../core/services/auth.service';
 import { SiteFooter } from '../site-footer/site-footer';
 import { SiteHeader } from '../site-header/site-header';
@@ -16,6 +17,6 @@ export class AppShell {
 
   protected async logout(): Promise<void> {
     this.auth.logout();
-    await this.router.navigateByUrl('/login');
+    await this.router.navigateByUrl(APP_ROUTES.login);
   }
 }

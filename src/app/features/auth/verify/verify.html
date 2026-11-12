@@ -27,8 +27,8 @@
   <p class="hint">Si tienes abierta tu cuenta de Google con este correo, verifícate al instante:</p>
   <div #googleButton class="google-button"></div>
 
-  <button class="link-button" type="button" (click)="resend()" [disabled]="resendAction.pending() || cooldown() > 0">
-    {{ cooldown() > 0 ? 'Reenviar código (' + cooldown() + ' s)' : 'Reenviar código' }}
+  <button class="link-button" type="button" (click)="resend()" [disabled]="resendAction.pending() || cooldown.active()">
+    {{ cooldown.active() ? 'Reenviar código (' + cooldown.remaining() + ' s)' : 'Reenviar código' }}
   </button>
   <p class="auth-footer"><a routerLink="/login">Volver al inicio de sesión</a></p>
 </app-auth-card>

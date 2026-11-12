@@ -1,3 +1,4 @@
+import { SECURITY } from '../config/security';
 import { fromBase64, timingSafeEqual, toBase64, utf8 } from './encoding';
 
 /**
@@ -7,7 +8,7 @@ import { fromBase64, timingSafeEqual, toBase64, utf8 } from './encoding';
  */
 export class PasswordHasher {
   private static readonly SCHEME = 'pbkdf2-sha256';
-  private static readonly ITERATIONS = 100_000; // máximo que permite WebCrypto en Workers
+  private static readonly ITERATIONS = SECURITY.PBKDF2_ITERATIONS;
   private static readonly SALT_BYTES = 16;
   private static readonly KEY_BYTES = 32;
 

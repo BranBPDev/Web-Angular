@@ -1,5 +1,7 @@
+import { SECURITY } from '../config/security';
 import { HttpError } from '../core/errors';
 
+const CODE_PATTERN = new RegExp(`^\\d{${SECURITY.CODE_LENGTH}}$`);
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /** Validación y normalización de los datos de entrada. */
@@ -14,15 +16,17 @@ export class Validator {
 
   static newPassword(value: unknown): string {
     const password = typeof value === 'string' ? value : '';
-    if (password.length < 8 || password.length > 128 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
-      throw HttpError.badRequest('WEAK_PASSWORD', 'La contraseña debe tener entre 8 y 128 caracteres, con letras y números.');
+    if (password.length < SECURITY.PASSWORD_MIN_LENGTH || password.length > SECURITY.PASSWORD_MAX_LENGTH || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      throw HttpError.badRequest('WEAK_PASSWORD', `La contraseña debe tener entre ${SECURITY.PASSWORD_MIN_LENGTH} y ${SECURITY.PASSWORD_MAX_LENGTH} caracteres, con letras y números.`);
     }
     return password;
   }
 
   static code(value: unknown): string {
     const code = typeof value === 'string' ? value.trim() : '';
-    if (!/^\d{6}$/.test(code)) throw HttpError.badRequest('INVALID_CODE', 'El código debe tener 6 dígitos.');
+    if (!CODE_PATTERN.test(code)) {
+      throw HttpError.badRequest('INVALID_CODE', `El código debe tener ${SECURITY.CODE_LENGTH} dígitos.`);
+    }
     return code;
   }
 

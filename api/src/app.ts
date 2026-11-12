@@ -1,4 +1,5 @@
 import type { Env } from './config/env';
+import { SECURITY } from './config/security';
 import { AdminController } from './controllers/AdminController';
 import { AuthController } from './controllers/AuthController';
 import { SystemController } from './controllers/SystemController';
@@ -20,8 +21,6 @@ import { Hmac } from './utils/Hmac';
 import { JwtService } from './utils/JwtService';
 import { PasswordHasher } from './utils/PasswordHasher';
 
-const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
-
 /** Raíz de composición: crea las dependencias y registra las rutas. */
 export class App {
   private readonly router = new Router();
@@ -29,8 +28,9 @@ export class App {
 
   constructor(env: Env) {
     const db = new Database(env.NEON_DATABASE_URL);
+    const googleClientId = env.GOOGLE_CLIENT_ID ?? '';
     const hmac = new Hmac(env.JWT_SECRET);
-    const jwt = new JwtService(hmac, SESSION_TTL_SECONDS);
+    const jwt = new JwtService(hmac, SECURITY.SESSION_TTL_SECONDS);
     const users = new UserDao(db);
     const bearer = new BearerAuth(jwt);
 
@@ -42,11 +42,11 @@ export class App {
       jwt,
       new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM),
       new EmailTemplates(env.SITE_URL),
-      new GoogleIdentityVerifier(env.GOOGLE_CLIENT_ID ?? ''),
+      new GoogleIdentityVerifier(googleClientId),
     );
     const auth = new AuthController(authService, bearer);
     const admin = new AdminController(new Authorizer(bearer, users));
-    const system = new SystemController(env.GOOGLE_CLIENT_ID ?? '');
+    const system = new SystemController(googleClientId);
 
     this.cors = new Cors(env.ALLOWED_ORIGINS);
     this.router

@@ -1,0 +1,25 @@
+/* Estructura de las páginas con sesión: cabecera, contenido y pie. */
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+.page__main { flex: 1; padding-top: 40px; padding-bottom: 56px; }
+
+.site-header { position: sticky; top: 0; z-index: 10; background: var(--card); border-bottom: 1px solid var(--border); }
+.site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
+.site-header__user { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand__logo { display: block; width: 34px; height: auto; }
+.brand__name { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.brand__tld { color: var(--primary); }
+
+.user-chip {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 240px;
+  padding: 6px 10px; font-size: 0.85rem; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.site-footer { padding: 20px 0; font-size: 0.85rem; text-align: center; color: var(--muted); border-top: 1px solid var(--border); }
+
+@media (max-width: 560px) {
+  .user-chip { display: none; }
+}

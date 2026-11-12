@@ -1,0 +1,25 @@
+/* Bloques de contenido: portada, tarjetas, paneles e insignias. */
+.hero { margin-bottom: 36px; }
+.eyebrow { margin: 0 0 8px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.hero h1 { margin: 0 0 12px; font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.hero__text { margin: 0; max-width: 560px; font-size: 1.05rem; line-height: 1.6; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 36px; }
+.card { padding: 22px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+.card__icon {
+  display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 14px;
+  color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, transparent); border-radius: 10px;
+}
+.card h2 { margin: 0 0 6px; font-size: 1.05rem; }
+.card p { margin: 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
+
+.panel { padding: 24px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+.panel h2 { margin: 0 0 16px; font-size: 1.1rem; }
+.panel p { margin: 0; }
+.panel__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 0; }
+.panel__list dt { margin-bottom: 4px; font-size: 0.8rem; color: var(--muted); }
+.panel__list dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+
+.badge { display: inline-block; padding: 3px 10px; font-size: 0.8rem; font-weight: 600; border-radius: 999px; }
+.badge--ok { color: var(--success); background: color-mix(in srgb, var(--success) 14%, transparent); }
+.badge--admin { color: #fff; background: var(--primary); }

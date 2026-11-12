@@ -1,3 +1,4 @@
+import { SECURITY } from '../config/security';
 import type { BearerAuth } from '../core/BearerAuth';
 import { jsonResponse, readJson } from '../core/http';
 import type { AuthService } from '../services/AuthService';
@@ -25,7 +26,7 @@ export class AuthController {
 
   login = async (request: Request): Promise<Response> => {
     const body = await readJson(request);
-    return jsonResponse(await this.auth.login(Validator.email(body['email']), Validator.requiredText(body['password'], 'password', 128)));
+    return jsonResponse(await this.auth.login(Validator.email(body['email']), Validator.requiredText(body['password'], 'password', SECURITY.PASSWORD_MAX_LENGTH)));
   };
 
   google = async (request: Request): Promise<Response> => {

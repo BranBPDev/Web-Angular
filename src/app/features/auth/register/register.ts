@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { APP_ROUTES, PASSWORD_RULES } from '../../../core/config/app.constants';
 import { AuthService } from '../../../core/services/auth.service';
 import { AsyncAction } from '../../../core/utils/async-action';
 import { AuthCard } from '../../../shared/components/auth-card/auth-card';
@@ -19,7 +20,15 @@ export class Register {
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     email: ['', [Validators.required, emailValidator]],
-    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(128), strongPasswordValidator]],
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(PASSWORD_RULES.minLength),
+        Validators.maxLength(PASSWORD_RULES.maxLength),
+        strongPasswordValidator,
+      ],
+    ],
     confirm: ['', [Validators.required, matchesValidator('password')]],
   });
   protected readonly action = new AsyncAction();
@@ -32,12 +41,8 @@ export class Register {
   }
 
   protected async submit(): Promise<void> {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
     const { email, password } = this.form.getRawValue();
-    const ok = await this.action.run(() => this.auth.register(email, password));
-    if (ok) await this.router.navigate(['/verify'], { queryParams: { email, sent: 1 } });
+    const ok = await this.action.submit(this.form, () => this.auth.register(email, password));
+    if (ok) await this.router.navigate([APP_ROUTES.verify], { queryParams: { email, sent: 1 } });
   }
 }

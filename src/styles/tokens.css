@@ -1,0 +1,27 @@
+/* Variables de diseño (colores) con modo claro y oscuro automático. */
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1b1f27;
+  --muted: #5b6472;
+  --border: #d9dee8;
+  --primary: #3b5bdb;
+  --primary-hover: #304cc0;
+  --danger: #c92a2a;
+  --success: #2b8a3e;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151c;
+    --card: #1b2029;
+    --text: #e8ebf2;
+    --muted: #9aa4b5;
+    --border: #2c3442;
+    --primary: #5c7cfa;
+    --primary-hover: #748ffc;
+    --danger: #ff8787;
+    --success: #69db7c;
+  }
+}

@@ -1,60 +1,54 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { APP_ROUTES, RESEND_COOLDOWN_SECONDS } from '../../../core/config/app.constants';
 import { AuthService } from '../../../core/services/auth.service';
 import { GoogleIdentityService } from '../../../core/services/google-identity.service';
 import { AsyncAction } from '../../../core/utils/async-action';
 import { AuthCard } from '../../../shared/components/auth-card/auth-card';
 import { FormField } from '../../../shared/components/form-field/form-field';
-
-const RESEND_COOLDOWN_SECONDS = 60;
+import { Countdown } from '../../../shared/utils/countdown';
 
 @Component({
   selector: 'app-verify',
   imports: [ReactiveFormsModule, RouterLink, AuthCard, FormField],
   templateUrl: './verify.html',
 })
-export class Verify implements AfterViewInit, OnDestroy {
+export class Verify implements AfterViewInit {
   private readonly auth = inject(AuthService);
   private readonly google = inject(GoogleIdentityService);
   private readonly router = inject(Router);
 
   private readonly query = inject(ActivatedRoute).snapshot.queryParamMap;
   protected readonly email = this.query.get('email') ?? '';
-
   private readonly googleButton = viewChild.required<ElementRef<HTMLElement>>('googleButton');
-  private timer?: ReturnType<typeof setInterval>;
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
   });
   protected readonly verifyAction = new AsyncAction();
   protected readonly resendAction = new AsyncAction();
+  protected readonly cooldown = new Countdown();
   protected readonly info = signal<string | null>(null);
-  protected readonly cooldown = signal(0);
 
   constructor() {
-    if (!this.email) void this.router.navigate(['/register']);
+    inject(DestroyRef).onDestroy(() => {
+      this.cooldown.stop();
+      this.google.cancel();
+    });
+    if (!this.email) void this.router.navigate([APP_ROUTES.register]);
   }
 
   ngAfterViewInit(): void {
     if (!this.email) return;
-    if (this.query.get('sent')) this.startCooldown();
+    if (this.query.get('sent')) this.cooldown.start(RESEND_COOLDOWN_SECONDS);
     void this.connectGoogle();
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.timer);
-    this.google.cancel();
-  }
-
   protected async submit(): Promise<void> {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const ok = await this.verifyAction.run(() => this.auth.verify(this.email, this.form.controls.code.value));
-    if (ok) await this.router.navigateByUrl('/');
+    const code = this.form.controls.code.value;
+    const ok = await this.verifyAction.submit(this.form, () => this.auth.verify(this.email, code));
+    if (ok) await this.enter();
   }
 
   protected async resend(): Promise<void> {
@@ -62,7 +56,7 @@ export class Verify implements AfterViewInit, OnDestroy {
     const ok = await this.resendAction.run(() => this.auth.resendCode(this.email));
     if (ok) {
       this.info.set('Te hemos enviado un código nuevo.');
-      this.startCooldown();
+      this.cooldown.start(RESEND_COOLDOWN_SECONDS);
     }
   }
 
@@ -79,15 +73,10 @@ export class Verify implements AfterViewInit, OnDestroy {
 
   private async verifyWithGoogle(idToken: string): Promise<void> {
     const ok = await this.verifyAction.run(() => this.auth.verifyWithGoogle(this.email, idToken));
-    if (ok) await this.router.navigateByUrl('/');
+    if (ok) await this.enter();
   }
 
-  private startCooldown(): void {
-    clearInterval(this.timer);
-    this.cooldown.set(RESEND_COOLDOWN_SECONDS);
-    this.timer = setInterval(() => {
-      this.cooldown.update((seconds) => Math.max(0, seconds - 1));
-      if (this.cooldown() === 0) clearInterval(this.timer);
-    }, 1000);
+  private enter(): Promise<boolean> {
+    return this.router.navigateByUrl(APP_ROUTES.home);
   }
 }

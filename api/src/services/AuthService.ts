@@ -1,3 +1,4 @@
+import { SECURITY } from '../config/security';
 import { HttpError } from '../core/errors';
 import type { UserDao } from '../daos/UserDao';
 import type { VerificationCodeDao } from '../daos/VerificationCodeDao';
@@ -16,10 +17,6 @@ export interface Session {
 }
 
 export class AuthService {
-  private static readonly CODE_TTL_MINUTES = 15;
-  private static readonly MAX_ATTEMPTS = 5;
-  private static readonly RESEND_COOLDOWN_SECONDS = 60;
-
   constructor(
     private readonly users: UserDao,
     private readonly codes: VerificationCodeDao,
@@ -59,7 +56,7 @@ export class AuthService {
     if (record.expiresAt.getTime() < Date.now()) {
       throw HttpError.badRequest('CODE_EXPIRED', 'El código ha caducado. Solicita uno nuevo.');
     }
-    if (record.attempts >= AuthService.MAX_ATTEMPTS) {
+    if (record.attempts >= SECURITY.CODE_MAX_ATTEMPTS) {
       throw HttpError.tooManyRequests('TOO_MANY_ATTEMPTS', 'Demasiados intentos. Solicita un código nuevo.');
     }
     if (!(await this.codeHasher.matches(user.id, code, record.codeHash))) {
@@ -103,13 +100,13 @@ export class AuthService {
 
   private async issueCode(user: User): Promise<void> {
     const existing = await this.codes.findByUserId(user.id);
-    if (existing && Date.now() - existing.createdAt.getTime() < AuthService.RESEND_COOLDOWN_SECONDS * 1000) {
+    if (existing && Date.now() - existing.createdAt.getTime() < SECURITY.CODE_RESEND_COOLDOWN_SECONDS * 1000) {
       throw HttpError.tooManyRequests('RESEND_COOLDOWN', 'Espera un minuto antes de pedir otro código.');
     }
-    const code = generateNumericCode(6);
-    const expiresAt = new Date(Date.now() + AuthService.CODE_TTL_MINUTES * 60_000);
+    const code = generateNumericCode(SECURITY.CODE_LENGTH);
+    const expiresAt = new Date(Date.now() + SECURITY.CODE_TTL_MINUTES * 60_000);
     await this.codes.upsert(user.id, await this.codeHasher.hash(user.id, code), expiresAt);
-    await this.mailer.send(this.templates.verification(user.email, code, AuthService.CODE_TTL_MINUTES));
+    await this.mailer.send(this.templates.verification(user.email, code, SECURITY.CODE_TTL_MINUTES));
   }
 
   private async createSession(user: User): Promise<Session> {

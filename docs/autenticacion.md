@@ -39,3 +39,19 @@ Otros: `POST /api/auth/resend` (cooldown 60 s), `GET /api/config`, `GET /api/hea
 | `GOOGLE_CLIENT_ID` | Client ID OAuth (tipo Web) de Google Cloud |
 | `CLOUDFLARE_API_TOKEN` | Token con plantilla "Edit Cloudflare Workers" |
 | `CLOUDFLARE_ACCOUNT_ID` | ID de la cuenta de Cloudflare |
+
+## Roles
+
+Hay dos roles: `user` (usuario común, el valor por defecto) y `admin`.
+
+- Todo registro nuevo es `user`. La API ignora cualquier campo de rol que envíe el cliente.
+- La única forma de crear un administrador es en la base de datos:
+  `update users set role = 'admin' where email = 'correo@ejemplo.com';`
+- El servidor lee el rol **de la base de datos en cada petición** (`Authorizer.requireRole`), no del token,
+  así que un cambio de rol se aplica al instante. La interfaz lo refleja al recargar.
+- Los guards de Angular (`adminGuard`) son solo comodidad de la interfaz; la seguridad real está en el servidor.
+
+## Correos
+
+Todos comparten la plantilla de `EmailTemplates` (logo, tarjeta y pie). El logo se carga desde `{SITE_URL}/logo.png`,
+por lo que depende de que la web esté desplegada.

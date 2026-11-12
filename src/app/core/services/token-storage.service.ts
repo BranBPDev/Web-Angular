@@ -1,30 +1,20 @@
 import { Injectable } from '@angular/core';
+import { SafeStorage } from '../../shared/utils/safe-storage';
+import { TOKEN_STORAGE_KEY } from '../config/app.constants';
 
 @Injectable({ providedIn: 'root' })
 export class TokenStorage {
-  private static readonly KEY = 'branbp.token';
+  private readonly store = new SafeStorage(TOKEN_STORAGE_KEY);
 
   get(): string | null {
-    try {
-      return localStorage.getItem(TokenStorage.KEY);
-    } catch {
-      return null;
-    }
+    return this.store.get();
   }
 
   set(token: string): void {
-    try {
-      localStorage.setItem(TokenStorage.KEY, token);
-    } catch {
-      /* almacenamiento no disponible */
-    }
+    this.store.set(token);
   }
 
   clear(): void {
-    try {
-      localStorage.removeItem(TokenStorage.KEY);
-    } catch {
-      /* almacenamiento no disponible */
-    }
+    this.store.clear();
   }
 }

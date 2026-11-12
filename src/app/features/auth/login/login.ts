@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { API_ERRORS, APP_ROUTES } from '../../../core/config/app.constants';
 import { AuthService } from '../../../core/services/auth.service';
 import { AsyncAction } from '../../../core/utils/async-action';
 import { AuthCard } from '../../../shared/components/auth-card/auth-card';
@@ -23,16 +24,13 @@ export class Login {
   protected readonly action = new AsyncAction();
 
   protected async submit(): Promise<void> {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
     const { email, password } = this.form.getRawValue();
-    const ok = await this.action.run(() => this.auth.login(email, password));
+    const ok = await this.action.submit(this.form, () => this.auth.login(email, password));
+
     if (ok) {
-      await this.router.navigateByUrl('/');
-    } else if (this.action.errorCode() === 'EMAIL_NOT_VERIFIED') {
-      await this.router.navigate(['/verify'], { queryParams: { email } });
+      await this.router.navigateByUrl(APP_ROUTES.home);
+    } else if (this.action.errorCode() === API_ERRORS.emailNotVerified) {
+      await this.router.navigate([APP_ROUTES.verify], { queryParams: { email } });
     }
   }
 }

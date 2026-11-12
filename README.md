@@ -15,4 +15,4 @@ npm start
 ```
 
 El frontend local usa la API de producción (CORS permite `http://localhost:4200`).
-Más detalles en [docs/autenticacion.md](docs/autenticacion.md) y [docs/despliegue.md](docs/despliegue.md).
+Más detalles en [docs/estructura.md](docs/estructura.md), [docs/autenticacion.md](docs/autenticacion.md) y [docs/despliegue.md](docs/despliegue.md).
