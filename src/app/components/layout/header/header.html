@@ -1,0 +1,27 @@
+<div class="header">
+  <div class="header__inner">
+    <a class="header__brand" routerLink="/">
+      <img class="header__logo" src="/logo.png" alt="" width="34" height="33" />
+      <div class="header__name text-heading">
+        <div>branbp</div>
+        <div class="text-accent">.com</div>
+      </div>
+    </a>
+
+    <div class="header__actions">
+      @if (isAdmin()) {
+        <a class="btn btn--ghost" routerLink="/admin"><app-icon name="shield-check" [size]="16" />Administración</a>
+      }
+      @if (email(); as value) {
+        <div class="chip">
+          <app-icon name="user" [size]="16" />
+          <div class="chip__text text-secondary">{{ value }}</div>
+        </div>
+      }
+      <button type="button" class="btn btn--ghost" (click)="logout.emit()">
+        <app-icon name="log-out" [size]="16" />Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+<div class="header-spacer"></div>

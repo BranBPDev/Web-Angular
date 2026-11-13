@@ -1,13 +1,11 @@
+[← Volver al índice](../README.md)
+
 # Despliegue
 
-- **Dominio:** branbp.com (Cloudflare, registros A/CNAME de GitHub Pages en "DNS only").
-- **Frontend:** GitHub Pages con origen "GitHub Actions" (`.github/workflows/deploy.yml`).
-- **CNAME:** `public/CNAME` contiene `branbp.com`.
+- **Dominio:** branbp.com (Cloudflare; registros A y CNAME de GitHub Pages en "DNS only").
+- **Web:** GitHub Pages con origen "GitHub Actions" (`.github/workflows/deploy.yml`). `public/CNAME` contiene `branbp.com`.
 - **SPA:** el workflow copia `index.html` como `404.html` para que las rutas de Angular no fallen al recargar.
-- **API:** Worker de Cloudflare en `api.branbp.com` (`.github/workflows/deploy-api.yml`). Ver [autenticacion.md](autenticacion.md).
+- **CSS:** `styles.css` se minifica en la compilación de producción.
+- **API:** Worker de Cloudflare en `api.branbp.com` (`.github/workflows/deploy-api.yml`). Ver [Autenticación](autenticacion.md).
 - **Correo entrante:** admin@branbp.com se reenvía con Cloudflare Email Routing.
-
-## Panel de automatización
-
-`testing/run.bat` (pide administrador solo): subir a GitHub, comprobar la web, abrirla, flujo completo y servidor local.
-La carpeta `testing/` no se sube a GitHub.
+- **Correo saliente:** Resend.

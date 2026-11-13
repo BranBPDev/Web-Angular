@@ -1,0 +1,16 @@
+<app-auth-card heading="Iniciar sesión" subtitle="Accede con tu correo y contraseña.">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <app-form-field label="Correo electrónico" type="email" autocomplete="email" [control]="form.controls.email" />
+    <app-form-field label="Contraseña" type="password" autocomplete="current-password" [control]="form.controls.password" />
+
+    @if (action.error(); as message) {
+      <div class="text-error" role="alert">{{ message }}</div>
+    }
+
+    <button class="btn btn--block" type="submit" [disabled]="action.pending()">
+      {{ action.pending() ? 'Entrando…' : 'Entrar' }}
+    </button>
+  </form>
+
+  <div class="text-secondary text-center">¿No tienes cuenta? <a class="link" routerLink="/register">Regístrate</a></div>
+</app-auth-card>

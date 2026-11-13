@@ -1,0 +1,10 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <img class="auth-card__logo" src="/logo.png" alt="branbp.com" width="56" height="54" />
+    <div class="text-subtitle text-center" role="heading" aria-level="1">{{ heading() }}</div>
+    @if (subtitle()) {
+      <div class="text-secondary text-center text-break">{{ subtitle() }}</div>
+    }
+    <ng-content />
+  </div>
+</div>

@@ -12,10 +12,10 @@ import { Router } from './core/Router';
 import { UserDao } from './daos/UserDao';
 import { VerificationCodeDao } from './daos/VerificationCodeDao';
 import { Database } from './db/Database';
-import { AuthService } from './services/AuthService';
-import { ResendEmailSender } from './services/EmailSender';
-import { EmailTemplates } from './services/EmailTemplates';
-import { GoogleIdentityVerifier } from './services/GoogleIdentityVerifier';
+import { AuthManager } from './managers/AuthManager';
+import { ResendEmailSender } from './managers/EmailSender';
+import { EmailTemplates } from './managers/EmailTemplates';
+import { GoogleIdentityVerifier } from './managers/GoogleIdentityVerifier';
 import { CodeHasher } from './utils/CodeHasher';
 import { Hmac } from './utils/Hmac';
 import { JwtService } from './utils/JwtService';
@@ -34,7 +34,7 @@ export class App {
     const users = new UserDao(db);
     const bearer = new BearerAuth(jwt);
 
-    const authService = new AuthService(
+    const authManager = new AuthManager(
       users,
       new VerificationCodeDao(db),
       new PasswordHasher(),
@@ -44,7 +44,7 @@ export class App {
       new EmailTemplates(env.SITE_URL),
       new GoogleIdentityVerifier(googleClientId),
     );
-    const auth = new AuthController(authService, bearer);
+    const auth = new AuthController(authManager, bearer);
     const admin = new AdminController(new Authorizer(bearer, users));
     const system = new SystemController(googleClientId);
 

@@ -1,8 +1,405 @@
-/* Estilos globales. Cada archivo de src/styles/ cubre un ámbito concreto. */
-@import './styles/tokens.css';
-@import './styles/base.css';
-@import './styles/buttons.css';
-@import './styles/forms.css';
-@import './styles/auth.css';
-@import './styles/layout.css';
-@import './styles/content.css';
+/* ==========================================================================
+   branbp.com · ÚNICO archivo de estilos
+   El Action de GitHub lo minifica al compilar (angular.json -> optimization).
+   Índice:  1 Variables · 2 Base · 3 Textos · 4 Estructura · 5 Autenticación
+            6 Formularios · 7 Botones y enlaces · 8 Contenido · 9 Responsive
+   Regla: todo se maneja con flex (display, flex-flow, align-items, justify-content).
+   ========================================================================== */
+
+
+/* 1. VARIABLES ------------------------------------------------------------ */
+:root {
+  /* Colores de marca (turquesa del logo) */
+  --color-primary: #0a828e;          /* botones, bordes en foco, iconos */
+  --color-secondary: #086872;        /* tono más oscuro: hover de botones */
+  --color-primary-soft: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --color-on-primary: #ffffff;       /* texto sobre el color principal */
+  --color-accent: #087782;           /* texto destacado y enlaces */
+  --color-accent-hover: #065a63;     /* hover de enlaces */
+
+  /* Neutros */
+  --color-bg: #f3f7f8;
+  --color-surface: #ffffff;
+  --color-border: #d4dde1;
+  --color-text: #17202a;
+  --color-text-muted: #55636e;
+
+  /* Estados */
+  --color-danger: #c92a2a;
+  --color-success: #1f8a4c;
+
+  /* Tipografía: tamaños según el tipo de texto */
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --size-title: clamp(1.8rem, 4vw, 2.6rem);   /* título de página */
+  --size-subtitle: 1.5rem;                    /* título de tarjeta de acceso */
+  --size-heading: 1.1rem;                     /* títulos de bloque */
+  --size-info: 1rem;                          /* texto de información */
+  --size-secondary: 0.875rem;                 /* texto secundario */
+  --size-small: 0.8rem;                       /* etiquetas pequeñas */
+  --weight-regular: 400;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Espaciado */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Forma y movimiento */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+  --shadow-card: 0 8px 30px rgb(0 0 0 / 0.06);
+  --transition: 0.15s ease;
+
+  /* Medidas de estructura */
+  --header-height: 64px;
+  --content-width: 1040px;
+  --auth-width: 400px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent: #3cc3d0;
+    --color-accent-hover: #7fd8e1;
+    --color-bg: #0e1418;
+    --color-surface: #172027;
+    --color-border: #2a3640;
+    --color-text: #e6edf1;
+    --color-text-muted: #93a1ac;
+    --color-danger: #ff8787;
+    --color-success: #69db7c;
+    --shadow-card: 0 8px 30px rgb(0 0 0 / 0.35);
+  }
+}
+
+
+/* 2. BASE ----------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--size-info);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; }
+
+/* Elementos host de los componentes: todos se comportan como contenedores flex */
+app-root, app-shell, app-auth-card, app-login, app-register, app-verify, app-home, app-admin {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+app-header, app-footer, app-hero, app-panel, app-form-field {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+}
+
+app-feature-card, app-info-item {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 220px;
+}
+
+app-icon, app-badge {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* 3. TEXTOS (clases por tipo de texto) ------------------------------------ */
+.text-title { font-size: var(--size-title); font-weight: var(--weight-bold); line-height: 1.15; letter-spacing: -0.03em; color: var(--color-text); overflow-wrap: anywhere; }
+.text-subtitle { font-size: var(--size-subtitle); font-weight: var(--weight-bold); color: var(--color-text); }
+.text-heading { font-size: var(--size-heading); font-weight: var(--weight-semibold); color: var(--color-text); }
+.text-info { font-size: var(--size-info); line-height: 1.6; color: var(--color-text); }
+.text-secondary { font-size: var(--size-secondary); line-height: 1.5; color: var(--color-text-muted); }
+.text-label { font-size: var(--size-small); font-weight: var(--weight-bold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); }
+.text-field { font-size: var(--size-secondary); font-weight: var(--weight-semibold); color: var(--color-text); }
+.text-error { font-size: var(--size-secondary); color: var(--color-danger); }
+.text-ok { font-size: var(--size-secondary); color: var(--color-success); }
+
+/* Modificadores de texto */
+.text-strong { font-weight: var(--weight-semibold); }
+.text-accent { color: var(--color-accent); }
+.text-center { text-align: center; }
+.text-break { overflow-wrap: anywhere; }
+
+
+/* 4. ESTRUCTURA ----------------------------------------------------------- */
+.row { display: flex; flex-flow: row wrap; align-items: center; gap: var(--space-3); }
+
+.shell { display: flex; flex-flow: column nowrap; flex: 1 1 auto; width: 100%; }
+
+.shell__content {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-7);
+}
+
+/* Cabecera fija + separador del mismo ancho y alto (el contenido empieza justo debajo) */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--header-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-spacer { flex: 0 0 auto; width: 100%; height: var(--header-height); }
+
+.header__inner {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--content-width);
+  height: 100%;
+  padding: 0 var(--space-4);
+}
+
+.header__brand { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-3); }
+.header__logo { display: block; width: 34px; height: auto; }
+.header__name { display: flex; flex-flow: row nowrap; align-items: center; letter-spacing: -0.02em; font-weight: var(--weight-bold); }
+.header__actions { display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-end; gap: var(--space-3); min-width: 0; }
+
+.chip {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 240px;
+  padding: 6px var(--space-3);
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+.chip__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.footer {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-5) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+
+/* 5. AUTENTICACIÓN -------------------------------------------------------- */
+.auth-page {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  width: 100%;
+  padding: var(--space-5) var(--space-4);
+}
+
+.auth-card {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--auth-width);
+  padding: var(--space-6) 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-card__logo { display: block; align-self: center; width: 56px; height: auto; }
+
+.divider { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.divider__line { flex: 1 1 auto; height: 1px; background: var(--color-border); }
+
+.google-button { display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; min-height: 2px; }
+
+
+/* 6. FORMULARIOS ---------------------------------------------------------- */
+.form { display: flex; flex-flow: column nowrap; gap: var(--space-4); margin-top: var(--space-3); }
+
+.field { display: flex; flex-flow: column nowrap; gap: var(--space-2); width: 100%; }
+
+.field__control { position: relative; display: flex; flex-flow: row nowrap; align-items: center; width: 100%; }
+
+.field__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 11px var(--space-3);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.field__input--password { padding-right: 46px; }
+.field__input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-soft); }
+.field__input.ng-touched.ng-invalid { border-color: var(--color-danger); }
+
+/* Botón mostrar / ocultar contraseña */
+.field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
+}
+.field__toggle:hover { color: var(--color-primary); background: var(--color-primary-soft); }
+.field__toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+
+
+/* 7. BOTONES Y ENLACES ---------------------------------------------------- */
+.btn {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--weight-semibold);
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.btn:hover:not(:disabled) { background: var(--color-secondary); }
+.btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn--block { width: 100%; }
+
+.btn--ghost { padding: var(--space-2) var(--space-3); font-size: var(--size-secondary); color: var(--color-text); background: transparent; border-color: var(--color-border); }
+.btn--ghost:hover:not(:disabled) { background: var(--color-primary-soft); border-color: var(--color-primary); }
+
+.link { color: var(--color-accent); text-decoration: underline; transition: color var(--transition); }
+.link:hover { color: var(--color-accent-hover); }
+
+.link-button {
+  align-self: center;
+  padding: var(--space-1);
+  font-size: var(--size-secondary);
+  color: var(--color-accent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.link-button:hover:not(:disabled) { color: var(--color-accent-hover); }
+.link-button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+
+/* 8. CONTENIDO ------------------------------------------------------------ */
+.hero { display: flex; flex-flow: column nowrap; gap: var(--space-3); width: 100%; }
+.hero__text { max-width: 560px; }
+
+.card-list { display: flex; flex-flow: row wrap; gap: var(--space-4); width: 100%; }
+
+.feature-card {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  gap: var(--space-2);
+  padding: 22px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.feature-card__icon {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+  background: var(--color-primary-soft);
+  border-radius: 10px;
+}
+
+.panel {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.info-list { display: flex; flex-flow: row wrap; gap: var(--space-4); width: 100%; }
+.info-item { display: flex; flex-flow: column nowrap; align-items: flex-start; gap: var(--space-1); width: 100%; }
+
+.badge {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: var(--size-small);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+.badge--ok { color: var(--color-success); background: color-mix(in srgb, var(--color-success) 14%, transparent); border-color: transparent; }
+.badge--admin { color: var(--color-on-primary); background: var(--color-primary); border-color: transparent; }
+
+
+/* 9. RESPONSIVE ----------------------------------------------------------- */
+@media (max-width: 560px) {
+  .chip { display: none; }
+  .header__inner { padding: 0 var(--space-3); }
+}

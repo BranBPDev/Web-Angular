@@ -1,0 +1,31 @@
+<div class="field">
+  <label class="text-field" [for]="id">{{ label() }}</label>
+  <div class="field__control">
+    <input
+      class="field__input"
+      [id]="id"
+      [type]="inputType()"
+      [class.field__input--password]="isPassword()"
+      [formControl]="control()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.inputmode]="inputmode()"
+      [attr.maxlength]="maxlength()"
+    />
+    @if (isPassword()) {
+      <button
+        type="button"
+        class="field__toggle"
+        (mousedown)="$event.preventDefault()"
+        (click)="toggleReveal()"
+        [attr.aria-label]="revealed() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="revealed()"
+        [attr.aria-controls]="id"
+      >
+        <app-icon [name]="revealed() ? 'eye' : 'eye-off'" [size]="20" />
+      </button>
+    }
+  </div>
+  @if (error(); as message) {
+    <div class="text-error" role="alert">{{ message }}</div>
+  }
+</div>

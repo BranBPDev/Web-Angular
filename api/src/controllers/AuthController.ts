@@ -1,11 +1,11 @@
 import { SECURITY } from '../config/security';
 import type { BearerAuth } from '../core/BearerAuth';
 import { jsonResponse, readJson } from '../core/http';
-import type { AuthService } from '../services/AuthService';
+import type { AuthManager } from '../managers/AuthManager';
 import { Validator } from '../utils/Validator';
 
 export class AuthController {
-  constructor(private readonly auth: AuthService, private readonly bearer: BearerAuth) {}
+  constructor(private readonly auth: AuthManager, private readonly bearer: BearerAuth) {}
 
   register = async (request: Request): Promise<Response> => {
     const body = await readJson(request);

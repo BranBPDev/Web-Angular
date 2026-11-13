@@ -1,0 +1,9 @@
+<div class="hero">
+  @if (eyebrow()) {
+    <div class="text-label">{{ eyebrow() }}</div>
+  }
+  <div class="text-title" role="heading" aria-level="1">{{ heading() }}</div>
+  @if (text()) {
+    <div class="text-info hero__text">{{ text() }}</div>
+  }
+</div>

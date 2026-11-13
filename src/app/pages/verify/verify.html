@@ -1,0 +1,38 @@
+<app-auth-card heading="Verifica tu correo" [subtitle]="'Hemos enviado un código de 6 dígitos a ' + email + '.'">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <app-form-field
+      label="Código de verificación"
+      autocomplete="one-time-code"
+      inputmode="numeric"
+      [maxlength]="6"
+      [control]="form.controls.code"
+    />
+
+    @if (verifyAction.error(); as message) {
+      <div class="text-error" role="alert">{{ message }}</div>
+    }
+    @if (resendAction.error(); as message) {
+      <div class="text-error" role="alert">{{ message }}</div>
+    }
+    @if (info(); as message) {
+      <div class="text-ok" role="status">{{ message }}</div>
+    }
+
+    <button class="btn btn--block" type="submit" [disabled]="verifyAction.pending()">
+      {{ verifyAction.pending() ? 'Verificando…' : 'Verificar' }}
+    </button>
+  </form>
+
+  <div class="divider">
+    <div class="divider__line"></div>
+    <div class="text-secondary">o</div>
+    <div class="divider__line"></div>
+  </div>
+  <div class="text-secondary text-center">Si tienes abierta tu cuenta de Google con este correo, verifícate al instante:</div>
+  <div #googleButton class="google-button"></div>
+
+  <button class="link-button" type="button" (click)="resend()" [disabled]="resendAction.pending() || cooldown.active()">
+    {{ cooldown.active() ? 'Reenviar código (' + cooldown.remaining() + ' s)' : 'Reenviar código' }}
+  </button>
+  <div class="text-secondary text-center"><a class="link" routerLink="/login">Volver al inicio de sesión</a></div>
+</app-auth-card>

@@ -1,7 +1,0 @@
-<div class="page">
-  <app-site-header [email]="auth.user()?.email ?? null" [isAdmin]="auth.isAdmin()" (logout)="logout()" />
-  <main class="container page__main">
-    <ng-content />
-  </main>
-  <app-site-footer />
-</div>

@@ -1,0 +1,23 @@
+<app-shell>
+  <app-hero
+    eyebrow="Panel principal"
+    [heading]="'Hola, ' + displayName()"
+    text="Te damos la bienvenida a branbp.com. Desde aquí irás accediendo a todo lo que vayamos añadiendo."
+  />
+
+  <div class="card-list">
+    @for (feature of features; track feature.heading) {
+      <app-feature-card [icon]="feature.icon" [heading]="feature.heading" [description]="feature.description" />
+    }
+  </div>
+
+  <app-panel heading="Tu cuenta">
+    <div class="info-list">
+      <app-info-item label="Correo">{{ session.user()?.email }}</app-info-item>
+      <app-info-item label="Estado"><app-badge variant="ok">Verificada</app-badge></app-info-item>
+      <app-info-item label="Rol">
+        <app-badge [variant]="session.isAdmin() ? 'admin' : 'neutral'">{{ roleLabel() }}</app-badge>
+      </app-info-item>
+    </div>
+  </app-panel>
+</app-shell>
