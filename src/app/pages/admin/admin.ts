@@ -1,5 +1,4 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { AppShell } from '../../components/layout/shell/shell';
 import { Badge } from '../../components/ui/badge/badge';
 import { Hero } from '../../components/ui/hero/hero';
 import { Panel } from '../../components/ui/panel/panel';
@@ -8,7 +7,7 @@ import { AsyncAction } from '../../utils/async-action';
 
 @Component({
   selector: 'app-admin',
-  imports: [AppShell, Hero, Panel, Badge],
+  imports: [Hero, Panel, Badge],
   templateUrl: './admin.html',
 })
 export class Admin implements OnInit {

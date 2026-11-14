@@ -5,6 +5,7 @@ import type { User } from '../models/User';
 interface UserRow {
   id: string;
   email: string;
+  name: string | null;
   password_hash: string;
   role: string;
   verified_at: string | Date | null;
@@ -32,6 +33,12 @@ export class UserDao extends BaseDao {
     await this.db.query('update users set password_hash = $2, updated_at = now() where id = $1', [id, passwordHash]);
   }
 
+  async updateName(id: string, name: string | null): Promise<User | null> {
+    return this.map(
+      await this.one<UserRow>('update users set name = $2, updated_at = now() where id = $1 returning *', [id, name]),
+    );
+  }
+
   async markVerified(id: string): Promise<User | null> {
     return this.map(
       await this.one<UserRow>(
@@ -46,6 +53,7 @@ export class UserDao extends BaseDao {
     return {
       id: row.id,
       email: row.email,
+      name: row.name,
       passwordHash: row.password_hash,
       role: parseRole(row.role),
       verifiedAt: row.verified_at ? new Date(row.verified_at) : null,

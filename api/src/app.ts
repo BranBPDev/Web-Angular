@@ -1,5 +1,6 @@
 import type { Env } from './config/env';
 import { SECURITY } from './config/security';
+import { AccountController } from './controllers/AccountController';
 import { AdminController } from './controllers/AdminController';
 import { AuthController } from './controllers/AuthController';
 import { SystemController } from './controllers/SystemController';
@@ -12,7 +13,9 @@ import { Router } from './core/Router';
 import { UserDao } from './daos/UserDao';
 import { VerificationCodeDao } from './daos/VerificationCodeDao';
 import { Database } from './db/Database';
+import { AccountManager } from './managers/AccountManager';
 import { AuthManager } from './managers/AuthManager';
+import { CodeManager } from './managers/CodeManager';
 import { ResendEmailSender } from './managers/EmailSender';
 import { EmailTemplates } from './managers/EmailTemplates';
 import { GoogleIdentityVerifier } from './managers/GoogleIdentityVerifier';
@@ -34,18 +37,18 @@ export class App {
     const users = new UserDao(db);
     const bearer = new BearerAuth(jwt);
 
-    const authManager = new AuthManager(
-      users,
-      new VerificationCodeDao(db),
-      new PasswordHasher(),
-      new CodeHasher(hmac),
-      jwt,
-      new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM),
-      new EmailTemplates(env.SITE_URL),
-      new GoogleIdentityVerifier(googleClientId),
-    );
+    const passwords = new PasswordHasher();
+    const codes = new CodeManager(new VerificationCodeDao(db), new CodeHasher(hmac));
+    const mailer = new ResendEmailSender(env.RESEND_API_KEY, env.EMAIL_FROM);
+    const templates = new EmailTemplates(env.SITE_URL);
+    const authorizer = new Authorizer(bearer, users);
+
+    const authManager = new AuthManager(users, passwords, codes, jwt, mailer, templates, new GoogleIdentityVerifier(googleClientId));
+    const accountManager = new AccountManager(users, passwords, codes, mailer, templates);
+
     const auth = new AuthController(authManager, bearer);
-    const admin = new AdminController(new Authorizer(bearer, users));
+    const account = new AccountController(authorizer, accountManager);
+    const admin = new AdminController(authorizer);
     const system = new SystemController(googleClientId);
 
     this.cors = new Cors(env.ALLOWED_ORIGINS);
@@ -58,6 +61,10 @@ export class App {
       .post('/api/auth/login', auth.login)
       .post('/api/auth/google', auth.google)
       .get('/api/auth/me', auth.me)
+      .post('/api/account/name', account.updateName)
+      .post('/api/account/password/request', account.requestPasswordChange)
+      .post('/api/account/password/resend', account.resendPasswordChange)
+      .post('/api/account/password/confirm', account.confirmPasswordChange)
       .get('/api/admin/check', admin.check);
   }
 

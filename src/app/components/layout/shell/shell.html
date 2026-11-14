@@ -1,7 +1,0 @@
-<div class="shell">
-  <app-header [email]="session.user()?.email ?? null" [isAdmin]="session.isAdmin()" (logout)="logout()" />
-  <div class="shell__content">
-    <ng-content />
-  </div>
-  <app-footer />
-</div>

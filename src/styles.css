@@ -99,26 +99,39 @@ a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 
 /* Elementos host de los componentes: todos se comportan como contenedores flex */
-app-root, app-shell, app-auth-card, app-login, app-register, app-verify, app-home, app-admin {
+app-root, app-main-layout, app-auth-card, app-login, app-register, app-verify {
   display: flex;
   flex-flow: column nowrap;
   flex: 1 1 auto;
   width: 100%;
 }
 
-app-header, app-footer, app-hero, app-panel, app-form-field {
+/* Páginas que se muestran dentro del layout principal: sus bloques se separan con un hueco fijo */
+app-home, app-account, app-admin {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+app-header, app-footer, app-hero, app-panel, app-form-field, app-projects-carousel, app-account-profile, app-account-password {
   display: flex;
   flex-flow: column nowrap;
   width: 100%;
 }
 
-app-feature-card, app-info-item {
+app-project-card {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+app-info-item {
   display: flex;
   flex-flow: column nowrap;
   flex: 1 1 220px;
 }
 
-app-icon, app-badge {
+app-user-menu, app-icon, app-badge {
   display: inline-flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -147,18 +160,19 @@ app-icon, app-badge {
 /* 4. ESTRUCTURA ----------------------------------------------------------- */
 .row { display: flex; flex-flow: row wrap; align-items: center; gap: var(--space-3); }
 
-.shell { display: flex; flex-flow: column nowrap; flex: 1 1 auto; width: 100%; }
+.layout { display: flex; flex-flow: column nowrap; flex: 1 1 auto; width: 100%; }
 
-.shell__content {
+.layout__content {
   display: flex;
   flex-flow: column nowrap;
   flex: 1 1 auto;
-  gap: var(--space-6);
   width: 100%;
   max-width: var(--content-width);
   margin: 0 auto;
   padding: var(--space-6) var(--space-4) var(--space-7);
 }
+
+.separator { width: 100%; height: 1px; background: var(--color-border); }
 
 /* Cabecera fija + separador del mismo ancho y alto (el contenido empieza justo debajo) */
 .header {
@@ -195,20 +209,63 @@ app-icon, app-badge {
 .header__name { display: flex; flex-flow: row nowrap; align-items: center; letter-spacing: -0.02em; font-weight: var(--weight-bold); }
 .header__actions { display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-end; gap: var(--space-3); min-width: 0; }
 
-.chip {
+/* Menú de usuario: icono que despliega cuenta, administración y cerrar sesión */
+.user-menu { position: relative; display: flex; flex-flow: row nowrap; align-items: center; }
+
+.user-menu__trigger {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-  max-width: 240px;
-  padding: 6px var(--space-3);
-  color: var(--color-text-muted);
-  background: var(--color-bg);
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
 }
-.chip__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-menu__trigger:hover, .user-menu__trigger[aria-expanded="true"] { color: var(--color-primary); background: var(--color-primary-soft); border-color: var(--color-primary); }
+.user-menu__trigger:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+.user-menu__panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 110;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--space-1);
+  min-width: 240px;
+  max-width: calc(100vw - 2 * var(--space-4));
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.user-menu__profile { display: flex; flex-flow: column nowrap; gap: 2px; padding: var(--space-2) var(--space-3); }
+
+.user-menu__item {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 10px var(--space-3);
+  font-size: var(--size-secondary);
+  color: var(--color-text);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
+}
+.user-menu__item:hover { color: var(--color-accent); background: var(--color-primary-soft); }
+.user-menu__item:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
 
 .footer {
   display: flex;
@@ -254,7 +311,8 @@ app-icon, app-badge {
 
 
 /* 6. FORMULARIOS ---------------------------------------------------------- */
-.form { display: flex; flex-flow: column nowrap; gap: var(--space-4); margin-top: var(--space-3); }
+.form { display: flex; flex-flow: column nowrap; gap: var(--space-4); }
+.auth-card .form { margin-top: var(--space-3); }
 
 .field { display: flex; flex-flow: column nowrap; gap: var(--space-2); width: 100%; }
 
@@ -268,6 +326,8 @@ app-icon, app-badge {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+  user-select: text;
+  -webkit-user-select: text;
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 .field__input--password { padding-right: 46px; }
@@ -318,9 +378,28 @@ app-icon, app-badge {
 .btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn--block { width: 100%; }
+.btn--auto { align-self: flex-start; }
 
 .btn--ghost { padding: var(--space-2) var(--space-3); font-size: var(--size-secondary); color: var(--color-text); background: transparent; border-color: var(--color-border); }
 .btn--ghost:hover:not(:disabled) { background: var(--color-primary-soft); border-color: var(--color-primary); }
+
+.icon-button {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+}
+.icon-button:hover:not(:disabled) { color: var(--color-primary); background: var(--color-primary-soft); border-color: var(--color-primary); }
+.icon-button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.icon-button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .link { color: var(--color-accent); text-decoration: underline; transition: color var(--transition); }
 .link:hover { color: var(--color-accent-hover); }
@@ -343,30 +422,36 @@ app-icon, app-badge {
 .hero { display: flex; flex-flow: column nowrap; gap: var(--space-3); width: 100%; }
 .hero__text { max-width: 560px; }
 
-.card-list { display: flex; flex-flow: row wrap; gap: var(--space-4); width: 100%; }
+.section-header { display: flex; flex-flow: row nowrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); width: 100%; }
+.section-header__text { display: flex; flex-flow: column nowrap; gap: var(--space-1); min-width: 0; }
 
-.feature-card {
+.carousel { display: flex; flex-flow: column nowrap; gap: var(--space-4); width: 100%; }
+.carousel__controls { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-2); }
+
+.carousel__track {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--space-4);
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__track > app-project-card { flex: 0 0 calc((100% - 2 * var(--space-4)) / 3); scroll-snap-align: start; }
+
+.project-card {
   display: flex;
   flex-flow: column nowrap;
   flex: 1 1 auto;
-  gap: var(--space-2);
-  padding: 22px;
+  overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 }
-.feature-card__icon {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: var(--space-2);
-  color: var(--color-accent);
-  background: var(--color-primary-soft);
-  border-radius: 10px;
-}
+.project-card__image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--color-bg); }
+.project-card__body { display: flex; flex-flow: column nowrap; align-items: flex-start; flex: 1 1 auto; gap: var(--space-2); padding: var(--space-4); }
+.project-card__body .btn { margin-top: auto; }
 
 .panel {
   display: flex;
@@ -399,7 +484,11 @@ app-icon, app-badge {
 
 
 /* 9. RESPONSIVE ----------------------------------------------------------- */
+@media (max-width: 900px) {
+  .carousel__track > app-project-card { flex-basis: calc((100% - var(--space-4)) / 2); }
+}
+
 @media (max-width: 560px) {
-  .chip { display: none; }
   .header__inner { padding: 0 var(--space-3); }
+  .carousel__track > app-project-card { flex-basis: 85%; }
 }

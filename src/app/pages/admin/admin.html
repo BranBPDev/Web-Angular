@@ -1,20 +1,18 @@
-<app-shell>
-  <app-hero
-    eyebrow="Administración"
-    heading="Panel de administración"
-    text="Aquí irá el gestor de contenido (CMS) para editar la web y subir proyectos."
-  />
+<app-hero
+  eyebrow="Administración"
+  heading="Panel de administración"
+  text="Aquí irá el gestor de contenido (CMS) para editar la web y subir proyectos."
+/>
 
-  <app-panel heading="Estado del acceso">
-    @if (confirmed()) {
-      <div class="row">
-        <app-badge variant="ok">Confirmado</app-badge>
-        <div class="text-info">El servidor ha verificado tu rol de administrador.</div>
-      </div>
-    } @else if (check.error()) {
-      <div class="text-error" role="alert">{{ check.error() }}</div>
-    } @else {
-      <div class="text-secondary">Comprobando permisos…</div>
-    }
-  </app-panel>
-</app-shell>
+<app-panel heading="Estado del acceso">
+  @if (confirmed()) {
+    <div class="row">
+      <app-badge variant="ok">Confirmado</app-badge>
+      <div class="text-info">El servidor ha verificado tu rol de administrador.</div>
+    </div>
+  } @else if (check.error()) {
+    <div class="text-error" role="alert">{{ check.error() }}</div>
+  } @else {
+    <div class="text-secondary">Comprobando permisos…</div>
+  }
+</app-panel>

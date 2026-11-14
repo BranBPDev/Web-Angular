@@ -7,7 +7,11 @@
       [type]="inputType()"
       [class.field__input--password]="isPassword()"
       [formControl]="control()"
-      [attr.autocomplete]="autocomplete()"
+      [attr.autocomplete]="effectiveAutocomplete()"
+      [attr.placeholder]="placeholder() || null"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
       [attr.inputmode]="inputmode()"
       [attr.maxlength]="maxlength()"
     />
@@ -15,7 +19,6 @@
       <button
         type="button"
         class="field__toggle"
-        (mousedown)="$event.preventDefault()"
         (click)="toggleReveal()"
         [attr.aria-label]="revealed() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
         [attr.aria-pressed]="revealed()"

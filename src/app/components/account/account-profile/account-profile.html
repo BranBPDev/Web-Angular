@@ -1,0 +1,27 @@
+<app-panel heading="Datos de la cuenta">
+  <div class="info-list">
+    <app-info-item label="Correo">{{ session.user()?.email }}</app-info-item>
+    <app-info-item label="Rol">
+      <app-badge [variant]="session.isAdmin() ? 'admin' : 'neutral'">{{ roleLabel() }}</app-badge>
+    </app-info-item>
+    <app-info-item label="Estado"><app-badge variant="ok">Verificada</app-badge></app-info-item>
+    <app-info-item label="Miembro desde">{{ memberSince() }}</app-info-item>
+  </div>
+
+  <div class="separator"></div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <app-form-field label="Nombre" autocomplete="name" placeholder="Cómo quieres que te llamemos" [control]="form.controls.name" />
+
+    @if (action.error(); as message) {
+      <div class="text-error" role="alert">{{ message }}</div>
+    }
+    @if (saved()) {
+      <div class="text-ok" role="status">Nombre guardado.</div>
+    }
+
+    <button class="btn btn--auto" type="submit" [disabled]="action.pending()">
+      {{ action.pending() ? 'Guardando…' : 'Guardar nombre' }}
+    </button>
+  </form>
+</app-panel>

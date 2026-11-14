@@ -1,0 +1,10 @@
+<div class="project-card">
+  <img class="project-card__image" [src]="project().image" [alt]="project().name" loading="lazy" />
+  <div class="project-card__body">
+    <div class="text-label">{{ kindLabel() }}</div>
+    <div class="text-heading text-break" role="heading" aria-level="3">{{ project().name }}</div>
+    <a class="btn btn--auto" [href]="project().url" target="_blank" rel="noopener noreferrer">
+      {{ actionLabel() }}<app-icon name="external-link" [size]="16" />
+    </a>
+  </div>
+</div>

@@ -1,10 +1,10 @@
-# Índice
+# branbp.com
 
-- [Estructura del proyecto](docs/estructura.md)
-- [Rutas de la web](docs/rutas.md)
-- [Estilos (CSS)](docs/estilos.md)
-- [Autenticación y roles](docs/autenticacion.md)
-- [Base de datos](docs/base-de-datos.md)
-- [Desarrollo](docs/desarrollo.md)
-- [Despliegue](docs/despliegue.md)
-- [Panel de automatización](docs/panel-automatizacion.md)
+## Documentación
+
+| Área | Documentos |
+|---|---|
+| **Proyecto** | [Estructura](docs/estructura.md) · [Rutas](docs/rutas.md) |
+| **Frontend** | [Estilos](docs/estilos.md) · [Portada](docs/portada.md) |
+| **Backend** | [Autenticación y cuenta](docs/autenticacion.md) · [Base de datos](docs/base-de-datos.md) |
+| **Operación** | [Desarrollo](docs/desarrollo.md) · [Despliegue](docs/despliegue.md) · [Panel de automatización](docs/panel-automatizacion.md) |

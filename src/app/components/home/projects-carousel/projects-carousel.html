@@ -1,0 +1,23 @@
+<div class="carousel">
+  <div class="section-header">
+    <div class="section-header__text">
+      <div class="text-label">Portfolio</div>
+      <div class="text-subtitle" role="heading" aria-level="2">Proyectos realizados</div>
+    </div>
+
+    <div class="carousel__controls">
+      <button type="button" class="icon-button" aria-label="Proyecto anterior" [disabled]="!canPrev()" (click)="move(-1)">
+        <app-icon name="chevron-left" [size]="20" />
+      </button>
+      <button type="button" class="icon-button" aria-label="Proyecto siguiente" [disabled]="!canNext()" (click)="move(1)">
+        <app-icon name="chevron-right" [size]="20" />
+      </button>
+    </div>
+  </div>
+
+  <div #track class="carousel__track" (scroll)="updateEdges()">
+    @for (project of projects; track project.url) {
+      <app-project-card [project]="project" />
+    }
+  </div>
+</div>

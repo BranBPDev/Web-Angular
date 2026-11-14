@@ -1,25 +1,40 @@
 import { Routes } from '@angular/router';
-import { adminGuard, authGuard, guestGuard } from './guards/auth.guard';
+import { guestGuard, adminGuard, authGuard } from './guards/auth.guard';
+import { MainLayout } from './layouts/main-layout/main-layout';
 
 /**
- * Todas las rutas de la web en un único sitio. Convención: la URL refleja la jerarquía.
+ * Todas las rutas de la web en un único sitio. La URL refleja la jerarquía.
  *   /                  portada
- *   /login             /register            /verify
- *   /admin             /admin/<subpágina>   (las subpáginas se añaden como hijas de 'admin')
+ *   /account           cuenta del usuario
+ *   /admin             administración   (subpáginas: /admin/<nombre>, como hijas de 'admin')
+ *   /login  /register  /verify          acceso (sin cabecera ni pie)
+ *
+ * Las páginas con sesión cuelgan de MainLayout, que aporta cabecera y pie una sola vez.
  */
 export const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    title: 'branbp.com',
+    component: MainLayout,
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/home/home').then((m) => m.Home),
-  },
-  {
-    path: 'admin',
-    title: 'Administración · branbp.com',
-    canActivate: [authGuard, adminGuard],
-    loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        title: 'branbp.com',
+        loadComponent: () => import('./pages/home/home').then((m) => m.Home),
+      },
+      {
+        path: 'account',
+        title: 'Mi cuenta · branbp.com',
+        loadComponent: () => import('./pages/account/account').then((m) => m.Account),
+      },
+      {
+        path: 'admin',
+        title: 'Administración · branbp.com',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
+      },
+    ],
   },
   {
     path: 'login',

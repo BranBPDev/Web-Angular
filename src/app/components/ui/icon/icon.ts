@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 
-export type IconName = 'eye' | 'eye-off' | 'user' | 'log-out' | 'shield-check' | 'mail' | 'zap' | 'globe';
+export type IconName = 'eye' | 'eye-off' | 'user' | 'log-out' | 'shield-check' | 'mail' | 'zap' | 'globe' | 'chevron-left' | 'chevron-right' | 'external-link';
 
 /** Icono SVG en línea (sin dependencias). Hereda el color del texto con currentColor. */
 @Component({

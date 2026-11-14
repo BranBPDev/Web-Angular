@@ -45,6 +45,11 @@ export class SessionManager {
     this.start(await this.auth.verifyWithGoogle(email, idToken));
   }
 
+  /** Actualiza los datos del usuario con sesión (p. ej. tras editar el nombre). */
+  setUser(user: User): void {
+    this.currentUser.set(user);
+  }
+
   logout(): void {
     this.tokens.clear();
     this.currentUser.set(null);

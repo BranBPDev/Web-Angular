@@ -22,6 +22,15 @@ export class Validator {
     return password;
   }
 
+  /** Nombre opcional: se limpian los espacios y un texto vacío significa "sin nombre". */
+  static name(value: unknown): string | null {
+    const name = typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
+    if (name.length > SECURITY.NAME_MAX_LENGTH) {
+      throw HttpError.badRequest('INVALID_NAME', `El nombre no puede superar ${SECURITY.NAME_MAX_LENGTH} caracteres.`);
+    }
+    return name.length > 0 ? name : null;
+  }
+
   static code(value: unknown): string {
     const code = typeof value === 'string' ? value.trim() : '';
     if (!CODE_PATTERN.test(code)) {

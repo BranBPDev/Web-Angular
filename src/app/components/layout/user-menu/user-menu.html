@@ -1,0 +1,38 @@
+<div class="user-menu">
+  <button
+    type="button"
+    class="user-menu__trigger"
+    aria-label="Menú de usuario"
+    aria-haspopup="menu"
+    [attr.aria-expanded]="open()"
+    (click)="toggle()"
+  >
+    <app-icon name="user" [size]="20" />
+  </button>
+
+  @if (open()) {
+    <div class="user-menu__panel" role="menu">
+      <div class="user-menu__profile">
+        <div class="text-info text-strong text-break">{{ displayName() }}</div>
+        <div class="text-secondary text-break">{{ session.user()?.email }}</div>
+      </div>
+
+      <div class="separator"></div>
+
+      <a class="user-menu__item" role="menuitem" routerLink="/account" (click)="close()">
+        <app-icon name="user" [size]="16" />Mi cuenta
+      </a>
+      @if (session.isAdmin()) {
+        <a class="user-menu__item" role="menuitem" routerLink="/admin" (click)="close()">
+          <app-icon name="shield-check" [size]="16" />Administración
+        </a>
+      }
+
+      <div class="separator"></div>
+
+      <button type="button" class="user-menu__item" role="menuitem" (click)="logout()">
+        <app-icon name="log-out" [size]="16" />Cerrar sesión
+      </button>
+    </div>
+  }
+</div>

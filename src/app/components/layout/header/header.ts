@@ -1,15 +1,11 @@
-import { Component, input, output } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Icon } from '../../ui/icon/icon';
+import { UserMenu } from '../user-menu/user-menu';
 
 /** Cabecera fija. Incluye un separador del mismo alto para que el contenido empiece justo debajo. */
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink, UserMenu],
   templateUrl: './header.html',
 })
-export class AppHeader {
-  readonly email = input<string | null>(null);
-  readonly isAdmin = input<boolean>(false);
-  readonly logout = output<void>();
-}
+export class AppHeader {}

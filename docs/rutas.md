@@ -1,19 +1,46 @@
-[← Volver al índice](../README.md)
+[Volver al índice](../README.md)
+
+---
 
 # Rutas de la web
 
-La URL refleja la jerarquía de la página. Todas se declaran en `src/app/app.routes.ts`.
+Mapa de URL y convención para añadir páginas nuevas. Todas se declaran en `src/app/app.routes.ts`.
 
-| URL | Página | Acceso |
-|---|---|---|
-| `/` | Portada | Con sesión |
-| `/login` | Iniciar sesión | Sin sesión |
-| `/register` | Crear cuenta | Sin sesión |
-| `/verify` | Verificar correo (`?email=`) | Sin sesión |
-| `/admin` | Panel de administración | Admin |
+**Contenido:** [Mapa de rutas](#mapa-de-rutas) · [Convención](#convención) · [Layout común](#layout-común)
+
+---
+
+## Mapa de rutas
+
+| URL | Página | Acceso | Cabecera y pie |
+|---|---|---|---|
+| `/` | Portada | Con sesión | Sí |
+| `/account` | Mi cuenta | Con sesión | Sí |
+| `/admin` | Administración | Administrador | Sí |
+| `/login` | Iniciar sesión | Sin sesión | No |
+| `/register` | Crear cuenta | Sin sesión | No |
+| `/verify` | Verificar correo (`?email=`) | Sin sesión | No |
+
+Las rutas que no existen redirigen a `/`.
+
+---
 
 ## Convención
 
-- Una página nueva `x` → `/x`.
-- Subpáginas encadenadas → `/x/loQueSea`, declaradas como `children` de la ruta `x`.
-- Las rutas no existentes redirigen a `/`.
+La URL refleja la jerarquía de la página.
+
+| Caso | URL |
+|---|---|
+| Página nueva `x` | `/x` |
+| Subpágina de `x` | `/x/loQueSea` |
+| Sub-subpágina | `/x/loQueSea/otra` |
+
+Las subpáginas se declaran como `children` de la ruta `x`.
+
+---
+
+## Layout común
+
+Las páginas con sesión cuelgan de una ruta padre con `MainLayout`, que aporta la cabecera y el pie una sola vez.
+Para que una página nueva los tenga, se añade como hija de esa ruta. Las pantallas de acceso se declaran fuera
+del padre y por eso no los muestran.

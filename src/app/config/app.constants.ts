@@ -5,6 +5,7 @@ export const APP_ROUTES = {
   login: '/login',
   register: '/register',
   verify: '/verify',
+  account: '/account',
   admin: '/admin',
 } as const;
 
@@ -15,6 +16,7 @@ export const API_ERRORS = {
 
 /** Debe coincidir con las reglas del servidor (api/src/config/security.ts). */
 export const PASSWORD_RULES = { minLength: 8, maxLength: 128 } as const;
+export const NAME_MAX_LENGTH = 60;
 export const RESEND_COOLDOWN_SECONDS = 60;
 
 export const TOKEN_STORAGE_KEY = 'branbp.token';

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, afterNextRender, inject, signal, viewChild } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthCard } from '../../components/auth/auth-card/auth-card';
@@ -14,7 +14,7 @@ import { Countdown } from '../../utils/countdown';
   imports: [ReactiveFormsModule, RouterLink, AuthCard, FormField],
   templateUrl: './verify.html',
 })
-export class Verify implements AfterViewInit {
+export class Verify {
   private readonly session = inject(SessionManager);
   private readonly google = inject(GoogleIdentityManager);
   private readonly router = inject(Router);
@@ -37,12 +37,12 @@ export class Verify implements AfterViewInit {
       this.google.cancel();
     });
     if (!this.email) void this.router.navigate([APP_ROUTES.register]);
-  }
 
-  ngAfterViewInit(): void {
-    if (!this.email) return;
-    if (this.query.get('sent')) this.cooldown.start(RESEND_COOLDOWN_SECONDS);
-    void this.connectGoogle();
+    afterNextRender(() => {
+      if (!this.email) return;
+      if (this.query.get('sent')) this.cooldown.start(RESEND_COOLDOWN_SECONDS);
+      void this.connectGoogle();
+    });
   }
 
   protected async submit(): Promise<void> {

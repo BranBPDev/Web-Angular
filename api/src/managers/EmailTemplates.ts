@@ -26,6 +26,20 @@ export class EmailTemplates {
     };
   }
 
+  passwordChange(to: string, code: string, minutes: number): EmailMessage {
+    const content = `
+      <h2 style="margin:0 0 12px;font-size:22px;color:#1b1f27">Confirma el cambio de contraseña</h2>
+      <p style="margin:0 0 4px;font-size:15px;line-height:1.5">Introduce este código en branbp.com para confirmar el cambio:</p>
+      <p style="margin:18px 0;font-size:36px;letter-spacing:8px;font-weight:700;color:#1b1f27">${code}</p>
+      <p style="margin:0;font-size:13px;line-height:1.5;color:#5b6472">Caduca en ${minutes} minutos. Si no has sido tú, ignora este mensaje: tu contraseña no cambiará.</p>`;
+    return {
+      to,
+      subject: `${code} es tu código para cambiar la contraseña`,
+      text: `Tu código para cambiar la contraseña de branbp.com es ${code}. Caduca en ${minutes} minutos.`,
+      html: this.layout('Confirma el cambio de contraseña', content),
+    };
+  }
+
   /** Estructura común de todos los correos. Basada en tablas y estilos en línea para máxima compatibilidad. */
   private layout(title: string, content: string): string {
     return `<!doctype html>

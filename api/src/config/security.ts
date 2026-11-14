@@ -7,5 +7,6 @@ export const SECURITY = {
   CODE_RESEND_COOLDOWN_SECONDS: 60,
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_MAX_LENGTH: 128,
+  NAME_MAX_LENGTH: 60,
   PBKDF2_ITERATIONS: 100_000, // máximo que permite WebCrypto en Workers
 } as const;
