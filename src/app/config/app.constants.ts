@@ -5,6 +5,8 @@ export const APP_ROUTES = {
   login: '/login',
   register: '/register',
   verify: '/verify',
+  projects: '/projects',
+  experience: '/experience',
   account: '/account',
   admin: '/admin',
 } as const;
@@ -20,3 +22,10 @@ export const NAME_MAX_LENGTH = 60;
 export const RESEND_COOLDOWN_SECONDS = 60;
 
 export const TOKEN_STORAGE_KEY = 'branbp.token';
+
+/** Carrusel de proyectos. */
+export const CAROUSEL = {
+  autoplayMs: 5000, // cada cuánto avanza solo
+  swipePx: 40, // desplazamiento mínimo para considerar un deslizamiento
+  fallbackMs: 900, // por si el navegador no avisa del fin de la animación
+} as const;

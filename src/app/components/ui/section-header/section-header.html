@@ -1,0 +1,12 @@
+<div class="section-header">
+  <div class="section-header__text">
+    @if (eyebrow()) {
+      <div class="text-label">{{ eyebrow() }}</div>
+    }
+    <div class="text-subtitle" role="heading" aria-level="2">{{ heading() }}</div>
+  </div>
+
+  @if (link()) {
+    <a class="link" [routerLink]="link()">{{ linkLabel() }}</a>
+  }
+</div>

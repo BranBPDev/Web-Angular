@@ -4,9 +4,9 @@
 
 # Portada
 
-Cómo se compone la portada a partir de secciones activables y cómo gestionar el carrusel de proyectos.
+Cómo se compone la portada a partir de secciones activables y cómo funciona el carrusel de proyectos.
 
-**Contenido:** [Secciones activables](#secciones-activables) · [Carrusel de proyectos](#carrusel-de-proyectos) · [Añadir o editar un proyecto](#añadir-o-editar-un-proyecto)
+**Contenido:** [Secciones activables](#secciones-activables) · [Carrusel de proyectos](#carrusel-de-proyectos) · [Ajustes del carrusel](#ajustes-del-carrusel) · [Experiencia laboral](#experiencia-laboral)
 
 ---
 
@@ -18,6 +18,7 @@ La portada (`pages/home`) no tiene contenido propio: monta, en orden, las seccio
 ```ts
 export const HOME_SECTIONS: readonly HomeSection[] = [
   { id: 'projects', enabled: true, component: ProjectsCarousel },
+  { id: 'experience', enabled: true, component: ExperienceSection },
 ];
 ```
 
@@ -32,33 +33,31 @@ export const HOME_SECTIONS: readonly HomeSection[] = [
 
 ## Carrusel de proyectos
 
-Componente `app-projects-carousel`. Cada tarjeta (`app-project-card`) muestra una imagen, el nombre del proyecto
-y un botón que abre el enlace en una pestaña nueva.
+Componente `app-projects-carousel`. Se ven tres tarjetas a la vez y la del centro es la activa.
 
-| Elemento | Detalle |
+| Elemento | Comportamiento |
 |---|---|
-| Navegación | Flechas anterior y siguiente (se desactivan en los extremos), deslizar con el dedo o con la rueda |
-| Tarjetas visibles | 3 en escritorio, 2 en tablet y 1 con avance de la siguiente en móvil |
-| Datos | `src/app/config/projects.config.ts` |
-| Imágenes | `public/projects/` |
+| Tarjeta | Ancho fijo: imagen arriba, título debajo y botón de acceso al final |
+| Puntos | Uno por proyecto, debajo del carrusel. El del proyecto activo cambia de color. Al pulsar uno, el carrusel muestra ese proyecto |
+| Avance automático | Cada 5 segundos. Se pausa con el ratón encima y se reinicia al interactuar |
+| Circular | Del último pasa al primero y, hacia atrás, del primero pasa al último |
+| Deslizar | Con el dedo o el ratón, a izquierda o derecha |
+| Movimiento reducido | Si el sistema lo pide, no avanza solo y la animación es instantánea |
+
+No hay flechas de siguiente y anterior.
 
 ---
 
-## Añadir o editar un proyecto
+## Ajustes del carrusel
 
-1. Guardar la captura en `public/projects/` (formato 16:9, recomendado 1280 x 720 px, JPG).
-2. Añadir una entrada en `src/app/config/projects.config.ts`:
-
-```ts
-{ name: 'creiss.es', url: 'https://creiss.es', image: '/projects/creiss.jpg', kind: 'web' },
-```
-
-| Campo | Valores |
+| Ajuste | Dónde |
 |---|---|
-| `name` | Texto que se muestra en la tarjeta |
-| `url` | Enlace al sitio o al repositorio |
-| `image` | Ruta de la captura, empezando por `/projects/` |
-| `kind` | `web` (botón "Visitar web") o `repo` (botón "Ver repositorio") |
+| Tiempo entre avances, distancia mínima de deslizamiento | `CAROUSEL` en `src/app/config/app.constants.ts` |
+| Ancho de tarjeta, separación y duración de la animación | `--carousel-card-width`, `--carousel-gap` y `--carousel-duration` en `src/styles.css` |
 
-Las imágenes actuales de `public/projects/` son marcadores de posición. Se sustituyen por capturas reales
-guardándolas con el mismo nombre de archivo.
+---
+
+## Experiencia laboral
+
+La sección `app-experience-section` muestra la experiencia a continuación del carrusel, con un enlace a su página completa.
+Ver [Contenido](contenido.md).

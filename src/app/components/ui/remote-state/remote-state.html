@@ -1,0 +1,9 @@
+@if (source().loading()) {
+  <div class="text-secondary">Cargando…</div>
+} @else if (source().error()) {
+  <div class="text-error" role="alert">{{ source().error() }}</div>
+} @else if (source().items().length === 0) {
+  <div class="text-secondary">No hay contenido disponible.</div>
+} @else {
+  <ng-content />
+}

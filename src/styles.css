@@ -61,6 +61,11 @@
   --content-width: 1040px;
   --auth-width: 400px;
 
+  /* Carrusel */
+  --carousel-card-width: 320px;
+  --carousel-gap: var(--space-4);
+  --carousel-duration: 0.5s;
+
   color-scheme: light dark;
 }
 
@@ -107,14 +112,16 @@ app-root, app-main-layout, app-auth-card, app-login, app-register, app-verify {
 }
 
 /* Páginas que se muestran dentro del layout principal: sus bloques se separan con un hueco fijo */
-app-home, app-account, app-admin {
+app-home, app-account, app-admin, app-projects, app-experience {
   display: flex;
   flex-flow: column nowrap;
   gap: var(--space-6);
   width: 100%;
 }
 
-app-header, app-footer, app-hero, app-panel, app-form-field, app-projects-carousel, app-account-profile, app-account-password {
+app-header, app-footer, app-hero, app-panel, app-form-field, app-breadcrumbs, app-remote-state, app-section-header,
+app-projects-carousel, app-experience-section, app-experience-list, app-experience-item, app-project-list,
+app-account-profile, app-account-password {
   display: flex;
   flex-flow: column nowrap;
   width: 100%;
@@ -123,6 +130,7 @@ app-header, app-footer, app-hero, app-panel, app-form-field, app-projects-carous
 app-project-card {
   display: flex;
   flex-flow: column nowrap;
+  width: 100%;
 }
 
 app-info-item {
@@ -174,6 +182,10 @@ app-user-menu, app-icon, app-badge {
 
 .separator { width: 100%; height: 1px; background: var(--color-border); }
 
+.breadcrumbs { display: flex; flex-flow: row wrap; align-items: center; gap: var(--space-2); margin-bottom: var(--space-5); }
+.breadcrumbs__link { font-size: var(--size-secondary); color: var(--color-accent); transition: color var(--transition); }
+.breadcrumbs__link:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
 /* Cabecera fija + separador del mismo ancho y alto (el contenido empieza justo debajo) */
 .header {
   position: fixed;
@@ -203,6 +215,19 @@ app-user-menu, app-icon, app-badge {
   height: 100%;
   padding: 0 var(--space-4);
 }
+
+.header__left { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-6); min-width: 0; }
+.header__nav { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-1); }
+.header__link {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--size-secondary);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+}
+.header__link:hover { color: var(--color-accent); background: var(--color-primary-soft); }
+.header__link--active { color: var(--color-accent); background: var(--color-primary-soft); }
 
 .header__brand { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-3); }
 .header__logo { display: block; width: 34px; height: auto; }
@@ -422,24 +447,42 @@ app-user-menu, app-icon, app-badge {
 .hero { display: flex; flex-flow: column nowrap; gap: var(--space-3); width: 100%; }
 .hero__text { max-width: 560px; }
 
+.section { display: flex; flex-flow: column nowrap; gap: var(--space-5); width: 100%; }
+
 .section-header { display: flex; flex-flow: row nowrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); width: 100%; }
 .section-header__text { display: flex; flex-flow: column nowrap; gap: var(--space-1); min-width: 0; }
 
-.carousel { display: flex; flex-flow: column nowrap; gap: var(--space-4); width: 100%; }
-.carousel__controls { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-2); }
+/* Carrusel: tres tarjetas visibles, la central es la activa */
+.carousel { display: flex; flex-flow: column nowrap; align-items: center; gap: var(--space-4); width: 100%; user-select: none; -webkit-user-select: none; }
 
-.carousel__track {
+.carousel__viewport {
   display: flex;
   flex-flow: row nowrap;
-  gap: var(--space-4);
+  justify-content: center;
   width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
+  padding: var(--space-2) 0;
+  overflow: hidden;
+  touch-action: pan-y;
 }
-.carousel__track::-webkit-scrollbar { display: none; }
-.carousel__track > app-project-card { flex: 0 0 calc((100% - 2 * var(--space-4)) / 3); scroll-snap-align: start; }
 
+.carousel__track { display: flex; flex-flow: row nowrap; flex: 0 0 auto; gap: var(--carousel-gap); }
+.carousel__track--next { transform: translateX(calc(-1 * (var(--carousel-card-width) + var(--carousel-gap)))); transition: transform var(--carousel-duration) ease; }
+.carousel__track--prev { transform: translateX(calc(var(--carousel-card-width) + var(--carousel-gap))); transition: transform var(--carousel-duration) ease; }
+
+.carousel__item { display: flex; flex-flow: column nowrap; flex: 0 0 var(--carousel-card-width); width: var(--carousel-card-width); opacity: 0; transform: scale(0.86); pointer-events: none; }
+.carousel__item--near { opacity: 0.5; }
+.carousel__item--center { opacity: 1; transform: scale(1); pointer-events: auto; }
+.carousel__track--next .carousel__item, .carousel__track--prev .carousel__item { transition: transform var(--carousel-duration) ease, opacity var(--carousel-duration) ease; }
+
+/* Puntos de navegación: el círculo se dibuja con ::before */
+.carousel__dots { display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; gap: var(--space-1); }
+.carousel__dot { display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; background: none; border: 0; cursor: pointer; }
+.carousel__dot::before { content: ''; width: 12px; height: 12px; background: var(--color-border); border-radius: var(--radius-pill); transition: background var(--transition), transform var(--transition); }
+.carousel__dot:hover::before { background: var(--color-text-muted); }
+.carousel__dot--active::before { background: var(--color-primary); transform: scale(1.15); }
+.carousel__dot:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: var(--radius-pill); }
+
+/* Tarjeta de proyecto: vertical (carrusel) u horizontal (página de proyectos) */
 .project-card {
   display: flex;
   flex-flow: column nowrap;
@@ -450,8 +493,26 @@ app-user-menu, app-icon, app-badge {
   border-radius: var(--radius-md);
 }
 .project-card__image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--color-bg); }
-.project-card__body { display: flex; flex-flow: column nowrap; align-items: flex-start; flex: 1 1 auto; gap: var(--space-2); padding: var(--space-4); }
-.project-card__body .btn { margin-top: auto; }
+.project-card__body { display: flex; flex-flow: column nowrap; align-items: center; flex: 1 1 auto; gap: var(--space-2); padding: var(--space-4); text-align: center; }
+.project-card__action { align-self: auto; margin-top: auto; }
+
+.project-card--horizontal { flex-flow: row nowrap; }
+.project-card--horizontal .project-card__image { flex: 0 0 40%; width: 40%; height: auto; aspect-ratio: 16 / 9; }
+.project-card--horizontal .project-card__body { align-items: flex-start; justify-content: center; padding: var(--space-5); text-align: left; }
+.project-card--horizontal .project-card__action { margin-top: var(--space-2); }
+
+.project-list { display: flex; flex-flow: column nowrap; gap: var(--space-5); width: 100%; }
+
+/* Experiencia: descripción a un lado e imagen al otro, alternando */
+.experience-list { display: flex; flex-flow: column nowrap; gap: var(--space-7); width: 100%; }
+
+.experience-item { display: flex; flex-flow: row nowrap; align-items: center; gap: var(--space-6); width: 100%; }
+.experience-item--reverse { flex-flow: row-reverse nowrap; }
+
+.experience-item__body { display: flex; flex-flow: column nowrap; flex: 1 1 50%; gap: var(--space-2); min-width: 0; }
+.experience-item__dates { align-self: flex-end; }
+.experience-item__text { text-align: justify; hyphens: auto; }
+.experience-item__image { flex: 1 1 50%; min-width: 0; max-width: 50%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
 
 .panel {
   display: flex;
@@ -484,11 +545,20 @@ app-user-menu, app-icon, app-badge {
 
 
 /* 9. RESPONSIVE ----------------------------------------------------------- */
-@media (max-width: 900px) {
-  .carousel__track > app-project-card { flex-basis: calc((100% - var(--space-4)) / 2); }
+@media (prefers-reduced-motion: reduce) {
+  :root { --carousel-duration: 0.01ms; }
+}
+
+@media (max-width: 760px) {
+  .experience-item, .experience-item--reverse { flex-flow: column-reverse nowrap; align-items: stretch; gap: var(--space-4); }
+  .experience-item__image { flex: 0 0 auto; max-width: 100%; width: 100%; }
+  .project-card--horizontal { flex-flow: column nowrap; }
+  .project-card--horizontal .project-card__image { flex: 0 0 auto; width: 100%; }
 }
 
 @media (max-width: 560px) {
+  :root { --carousel-card-width: 240px; }
   .header__inner { padding: 0 var(--space-3); }
-  .carousel__track > app-project-card { flex-basis: 85%; }
+  .header__left { gap: var(--space-3); }
+  .header__name { display: none; }
 }

@@ -1,0 +1,12 @@
+<div class="experience-item" [class.experience-item--reverse]="reversed()">
+  <div class="experience-item__body">
+    <div class="text-heading text-center" role="heading" aria-level="3">{{ item().title }}</div>
+    <div class="text-secondary text-center">{{ subtitle() }}</div>
+    <div class="experience-item__dates text-secondary">{{ period() }}</div>
+    <div class="experience-item__text text-info">{{ item().description }}</div>
+  </div>
+
+  @if (item().image; as image) {
+    <img class="experience-item__image" [src]="image" [alt]="item().title" loading="lazy" />
+  }
+</div>

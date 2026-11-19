@@ -1,0 +1,7 @@
+<app-remote-state [source]="source">
+  <div class="experience-list">
+    @for (item of items(); track item.id; let odd = $odd) {
+      <app-experience-item [item]="item" [reversed]="odd" />
+    }
+  </div>
+</app-remote-state>

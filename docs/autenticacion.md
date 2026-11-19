@@ -78,6 +78,8 @@ Hay dos roles: `user` (usuario común, el valor por defecto) y `admin`.
 |---|---|---|---|
 | GET | `/api/health` | Público | Estado de la API |
 | GET | `/api/config` | Público | Client ID de Google |
+| GET | `/api/projects` | Público | Proyectos (ver [Contenido](contenido.md)) |
+| GET | `/api/experience` | Público | Experiencia laboral (ver [Contenido](contenido.md)) |
 | POST | `/api/auth/register` | Público | Crear cuenta y enviar código |
 | POST | `/api/auth/resend` | Público | Reenviar código de verificación |
 | POST | `/api/auth/verify` | Público | Verificar con código |

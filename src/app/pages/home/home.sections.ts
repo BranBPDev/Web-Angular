@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { ExperienceSection } from '../../components/home/experience-section/experience-section';
 import { ProjectsCarousel } from '../../components/home/projects-carousel/projects-carousel';
 
 export interface HomeSection {
@@ -13,4 +14,5 @@ export interface HomeSection {
  */
 export const HOME_SECTIONS: readonly HomeSection[] = [
   { id: 'projects', enabled: true, component: ProjectsCarousel },
+  { id: 'experience', enabled: true, component: ExperienceSection },
 ];

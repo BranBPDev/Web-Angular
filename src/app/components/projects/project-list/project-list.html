@@ -1,0 +1,7 @@
+<app-remote-state [source]="source">
+  <div class="project-list">
+    @for (project of projects(); track project.id) {
+      <app-project-card [project]="project" layout="horizontal" />
+    }
+  </div>
+</app-remote-state>

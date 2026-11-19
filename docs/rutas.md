@@ -6,20 +6,22 @@
 
 Mapa de URL y convención para añadir páginas nuevas. Todas se declaran en `src/app/app.routes.ts`.
 
-**Contenido:** [Mapa de rutas](#mapa-de-rutas) · [Convención](#convención) · [Layout común](#layout-común)
+**Contenido:** [Mapa de rutas](#mapa-de-rutas) · [Convención](#convención) · [Añadir una página](#añadir-una-página)
 
 ---
 
 ## Mapa de rutas
 
-| URL | Página | Acceso | Cabecera y pie |
-|---|---|---|---|
-| `/` | Portada | Con sesión | Sí |
-| `/account` | Mi cuenta | Con sesión | Sí |
-| `/admin` | Administración | Administrador | Sí |
-| `/login` | Iniciar sesión | Sin sesión | No |
-| `/register` | Crear cuenta | Sin sesión | No |
-| `/verify` | Verificar correo (`?email=`) | Sin sesión | No |
+| URL | Página | Acceso | Cabecera y pie | Migas de pan |
+|---|---|---|---|---|
+| `/` | Portada | Con sesión | Sí | No (es la página padre) |
+| `/projects` | Proyectos | Con sesión | Sí | Inicio > Proyectos |
+| `/experience` | Experiencia laboral | Con sesión | Sí | Inicio > Experiencia |
+| `/account` | Mi cuenta | Con sesión | Sí | Inicio > Mi cuenta |
+| `/admin` | Administración | Administrador | Sí | Inicio > Administración |
+| `/login` | Iniciar sesión | Sin sesión | No | No |
+| `/register` | Crear cuenta | Sin sesión | No | No |
+| `/verify` | Verificar correo (`?email=`) | Sin sesión | No | No |
 
 Las rutas que no existen redirigen a `/`.
 
@@ -39,8 +41,10 @@ Las subpáginas se declaran como `children` de la ruta `x`.
 
 ---
 
-## Layout común
+## Añadir una página
 
-Las páginas con sesión cuelgan de una ruta padre con `MainLayout`, que aporta la cabecera y el pie una sola vez.
-Para que una página nueva los tenga, se añade como hija de esa ruta. Las pantallas de acceso se declaran fuera
-del padre y por eso no los muestran.
+1. Crear la página en `src/app/pages/<nombre>/`.
+2. Añadir su ruta como hija de la ruta con `MainLayout`, con `data: { breadcrumb: 'Etiqueta' }`.
+3. Si debe aparecer en la cabecera, añadir una línea en `src/app/config/nav.config.ts`.
+
+La cabecera, el pie y las migas de pan se aplican solos. Ver [Navegación](navegacion.md).

@@ -23,14 +23,14 @@ api/                       API (Cloudflare Worker, TypeScript)
   src/models/                entidades
   src/db/                    conexión a Neon
   src/utils/                 utilidades genéricas
-database/                  schema.sql y migrations/
+database/                  schema.sql, migrations/ y seed/
 docs/                      documentación (el índice está en README.md)
-public/                    favicon.ico, logo.png y projects/ (capturas del carrusel)
+public/                    favicon.ico, logo.png, projects/ y experience/ (imágenes)
 src/
   index.html                 único HTML con <html>, <head> y <body>
   styles.css                 único archivo de estilos
   app/
-    config/                  constantes, URL de la API y proyectos del carrusel
+    config/                  constantes, URL de la API y navegación de la cabecera
     models/                  tipos de datos
     utils/                   utilidades genéricas
     validators/              validadores de formularios
@@ -38,15 +38,17 @@ src/
     daos/                    acceso a la API
     managers/                estado y lógica de la aplicación
     guards/                  protección de rutas
-    layouts/                 estructura común de páginas (cabecera, contenido, pie)
+    layouts/                 estructura común de páginas (cabecera, migas, contenido, pie)
     components/              piezas reutilizables, cada una con su .ts y su .html
-      layout/                  header, user-menu, footer
-      ui/                      icon, badge, panel, hero, info-item
+      layout/                  header, user-menu, breadcrumbs, footer
+      ui/                      icon, badge, panel, hero, info-item, section-header, remote-state
       form/                    form-field
       auth/                    auth-card
-      home/                    projects-carousel, project-card
+      home/                    projects-carousel, project-card, experience-section
+      projects/                project-list
+      experience/              experience-list, experience-item
       account/                 account-profile, account-password
-    pages/                   home, account, admin, login, register, verify
+    pages/                   home, projects, experience, account, admin, login, register, verify
     app.routes.ts            todas las rutas
 testing/                   panel de automatización local (no se sube a GitHub)
 ```
@@ -75,7 +77,8 @@ Cada capa solo conoce a la inmediatamente inferior.
 | Separación | HTML en `.html`, lógica en `.ts` y estilos solo en `styles.css`. Sin `<style>`, `style=""` ni `<script>` en las plantillas. |
 | Etiquetas | Todo son `div`. Solo se usan otras etiquetas cuando es imprescindible: `a`, `button`, `form`, `label`, `input`, `img`, `svg`, `router-outlet` y los componentes propios. |
 | Componentes | Cada pieza (cabecera, pie, sección, campo, tarjeta) es un componente. Las páginas solo los montan. |
-| Layout | La cabecera y el pie se definen una sola vez en `layouts/main-layout` y se aplican por ruta. |
+| Layout | Cabecera, migas de pan y pie se definen una sola vez en `layouts/main-layout` y se aplican por ruta. |
+| Datos | El contenido (proyectos, experiencia) vive en la base de datos y se carga por la API. |
 | Constantes | Parámetros de seguridad en `api/src/config/security.ts`; constantes del frontend en `app/config/`. |
-| Reutilización | Lo repetido se extrae a `utils/` o a un componente (`AsyncAction`, `Countdown`, `SafeStorage`, `FormField`, `CodeManager`). |
+| Reutilización | Lo repetido se extrae a `utils/` o a un componente (`AsyncAction`, `Countdown`, `RemoteList`, `RepeatingTimer`, `FormField`, `RemoteState`, `CodeManager`). |
 | Contratos | Lo intercambiable se programa contra una interfaz (`EmailSender`). |

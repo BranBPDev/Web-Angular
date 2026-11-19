@@ -33,6 +33,7 @@ Sistema de diseño de `src/styles.css`, el único archivo de estilos de la web.
 | `--space-1` a `--space-7` | Espaciados |
 | `--radius-sm`, `--radius-md`, `--radius-pill`, `--shadow-card`, `--transition` | Forma y movimiento |
 | `--header-height`, `--content-width`, `--auth-width` | Medidas de estructura |
+| `--carousel-card-width`, `--carousel-gap`, `--carousel-duration` | Medidas y velocidad del carrusel |
 
 ---
 
@@ -66,9 +67,9 @@ Sistema de diseño de `src/styles.css`, el único archivo de estilos de la web.
 | 1 | Variables |
 | 2 | Base (reset y elementos host) |
 | 3 | Textos |
-| 4 | Estructura (layout, cabecera, menú de usuario, pie) |
+| 4 | Estructura (layout, cabecera, menú de usuario, migas de pan, pie) |
 | 5 | Autenticación |
 | 6 | Formularios |
 | 7 | Botones y enlaces |
-| 8 | Contenido (carrusel, tarjetas, paneles, insignias) |
+| 8 | Contenido (carrusel, tarjetas de proyecto, experiencia, paneles, insignias) |
 | 9 | Responsive |

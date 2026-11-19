@@ -3,6 +3,7 @@ import { SECURITY } from './config/security';
 import { AccountController } from './controllers/AccountController';
 import { AdminController } from './controllers/AdminController';
 import { AuthController } from './controllers/AuthController';
+import { ContentController } from './controllers/ContentController';
 import { SystemController } from './controllers/SystemController';
 import { Authorizer } from './core/Authorizer';
 import { BearerAuth } from './core/BearerAuth';
@@ -10,12 +11,15 @@ import { Cors } from './core/Cors';
 import { HttpError } from './core/errors';
 import { jsonResponse, withHeaders } from './core/http';
 import { Router } from './core/Router';
+import { ExperienceDao } from './daos/ExperienceDao';
+import { ProjectDao } from './daos/ProjectDao';
 import { UserDao } from './daos/UserDao';
 import { VerificationCodeDao } from './daos/VerificationCodeDao';
 import { Database } from './db/Database';
 import { AccountManager } from './managers/AccountManager';
 import { AuthManager } from './managers/AuthManager';
 import { CodeManager } from './managers/CodeManager';
+import { ContentManager } from './managers/ContentManager';
 import { ResendEmailSender } from './managers/EmailSender';
 import { EmailTemplates } from './managers/EmailTemplates';
 import { GoogleIdentityVerifier } from './managers/GoogleIdentityVerifier';
@@ -49,12 +53,15 @@ export class App {
     const auth = new AuthController(authManager, bearer);
     const account = new AccountController(authorizer, accountManager);
     const admin = new AdminController(authorizer);
+    const content = new ContentController(new ContentManager(new ProjectDao(db), new ExperienceDao(db)));
     const system = new SystemController(googleClientId);
 
     this.cors = new Cors(env.ALLOWED_ORIGINS);
     this.router
       .get('/api/health', system.health)
       .get('/api/config', system.config)
+      .get('/api/projects', content.projects)
+      .get('/api/experience', content.experience)
       .post('/api/auth/register', auth.register)
       .post('/api/auth/resend', auth.resend)
       .post('/api/auth/verify', auth.verify)

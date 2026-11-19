@@ -1,23 +1,48 @@
-<div class="carousel">
-  <div class="section-header">
-    <div class="section-header__text">
-      <div class="text-label">Portfolio</div>
-      <div class="text-subtitle" role="heading" aria-level="2">Proyectos realizados</div>
-    </div>
+<div class="section">
+  <app-section-header eyebrow="Portfolio" heading="Proyectos realizados" link="/projects" linkLabel="Ver todos" />
 
-    <div class="carousel__controls">
-      <button type="button" class="icon-button" aria-label="Proyecto anterior" [disabled]="!canPrev()" (click)="move(-1)">
-        <app-icon name="chevron-left" [size]="20" />
-      </button>
-      <button type="button" class="icon-button" aria-label="Proyecto siguiente" [disabled]="!canNext()" (click)="move(1)">
-        <app-icon name="chevron-right" [size]="20" />
-      </button>
-    </div>
-  </div>
+  <app-remote-state [source]="source">
+    <div class="carousel" (pointerenter)="onPointerEnter($event)" (pointerleave)="resume()">
+      <div
+        class="carousel__viewport"
+        (pointerdown)="onPointerDown($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointercancel)="onPointerCancel()"
+        (click)="onClick($event)"
+      >
+        <div
+          class="carousel__track"
+          [class.carousel__track--next]="shift() === 'next'"
+          [class.carousel__track--prev]="shift() === 'prev'"
+          (transitionend)="onTransitionEnd($event)"
+        >
+          @for (slot of slots(); track slot.offset) {
+            <div
+              class="carousel__item"
+              [class.carousel__item--center]="stateOf(slot.offset) === 'center'"
+              [class.carousel__item--near]="stateOf(slot.offset) === 'near'"
+              [attr.inert]="stateOf(slot.offset) === 'center' ? null : ''"
+            >
+              <app-project-card [project]="slot.project" />
+            </div>
+          }
+        </div>
+      </div>
 
-  <div #track class="carousel__track" (scroll)="updateEdges()">
-    @for (project of projects; track project.url) {
-      <app-project-card [project]="project" />
-    }
-  </div>
+      @if (count() > 1) {
+        <div class="carousel__dots" role="group" aria-label="Seleccionar proyecto">
+          @for (project of projects(); track project.id; let index = $index) {
+            <button
+              type="button"
+              class="carousel__dot"
+              [class.carousel__dot--active]="index === dotIndex()"
+              [attr.aria-label]="project.name"
+              [attr.aria-current]="index === dotIndex()"
+              (click)="goTo(index)"
+            ></button>
+          }
+        </div>
+      }
+    </div>
+  </app-remote-state>
 </div>
